@@ -91,6 +91,12 @@
           <span class="flex-1">Manage Vendors (<span id="sideVendorCount">0</span>)</span>
         </button>
 
+        <!-- Access & Permissions Settings (Admin Only) -->
+        <button id="sideNavPermissionsBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+          <svg class="w-4 h-4 shrink-0 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          <span class="flex-1">Access & Team Settings</span>
+        </button>
+
         <!-- CSV Export & Backup (Admin Only) -->
         <button id="sideExportCsvBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -147,17 +153,6 @@
 
     <div class="p-6 sm:p-8 space-y-6 flex-1">
       
-      <!-- Sales Closer Notice (If Sales Mode is Active) -->
-      <div id="salesCloserBanner" class="hidden p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
-        <div class="flex items-center gap-2.5">
-          <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-          <span><strong>Sales Closer Mode Active:</strong> Focused purely on lead outreach, follow-ups & stage conversion. Agency commissions and deletion permissions are protected.</span>
-        </div>
-        <button id="unlockAdminBannerBtn" type="button" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs whitespace-nowrap transition">
-          Unlock Admin Access
-        </button>
-      </div>
-
       <!-- ========================================== -->
       <!-- VIEW 1: PIPELINE / DEALS (COMMISSION FREE) -->
       <!-- ========================================== -->
@@ -489,6 +484,53 @@
         </div>
       </div>
 
+      <!-- ========================================== -->
+      <!-- VIEW 4: ACCESS & TEAM SETTINGS             -->
+      <!-- ========================================== -->
+      <div id="permissionsPageSection" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+          <div class="border-b border-slate-100 pb-4">
+            <h2 class="text-lg font-bold text-slate-900">Team Access & Vendor Assignment Hub</h2>
+            <p class="text-xs text-slate-500 mt-1">Configure which sales reps can see which photographers or makeup artists, and generate restricted links.</p>
+          </div>
+
+          <!-- Section 1: Sales Rep Generator -->
+          <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span>🔗</span> Generate Dedicated Sales Rep Link (Restricted to Specific Vendors)
+            </h3>
+            <p class="text-xs text-slate-500">Tick the vendors this sales closer is assigned to. The generated link will strictly isolate their view to only those vendors.</p>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Allowed Vendors for this Rep:</label>
+              <div id="repVendorCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs"></div>
+            </div>
+
+            <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-2">
+              <input type="text" id="generatedRepUrlInput" readonly placeholder="Select vendors above to generate link..." class="flex-1 px-3 py-2 text-xs bg-white border border-slate-300 rounded-lg font-mono text-slate-700 select-all">
+              <button id="copyRepLinkBtn" type="button" class="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-lg shadow-sm whitespace-nowrap transition">
+                Copy Exclusive Sales Link
+              </button>
+            </div>
+          </div>
+
+          <!-- Section 2: Master Security PIN Settings -->
+          <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span>🔐</span> Master Security PIN Settings
+            </h3>
+            <p class="text-xs text-slate-500">This PIN is required for switching to Admin mode and deleting any lead or vendor partner. Keep it strictly confidential.</p>
+            
+            <div class="flex items-center gap-3">
+              <input type="password" id="changeMasterPinInput" maxlength="6" value="7818" class="w-32 px-3 py-2 text-center text-sm font-mono font-bold tracking-widest bg-white border border-slate-300 rounded-lg">
+              <button id="saveNewPinBtn" type="button" class="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition">
+                Update Master PIN
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </main>
@@ -539,14 +581,14 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL 3: MANAGE VENDORS (ADMIN ONLY)       -->
+  <!-- MODAL 3: MANAGE VENDORS                    -->
   <!-- ========================================== -->
   <div id="manageVendorsModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-md w-full p-6 animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
         <div>
           <h3 class="font-bold text-slate-900 text-base">Active Vendor Partners</h3>
-          <p class="text-xs text-slate-500">Only Admin may remove vendor spaces.</p>
+          <p class="text-xs text-slate-500">Only Admin may remove vendor spaces with PIN authorization.</p>
         </div>
         <button id="closeManageVendorsBtn" type="button" class="text-slate-400 hover:text-slate-600 text-lg font-bold p-1">✕</button>
       </div>
@@ -566,7 +608,6 @@
       <p class="text-xs text-slate-500 mt-1 mb-4">Enter Master Admin PIN to unlock full financial access and delete permissions.</p>
       
       <div class="mb-4">
-        <!-- Secure Password Input with zero default hints -->
         <input type="password" id="adminPinInput" maxlength="6" placeholder="••••" class="w-32 mx-auto text-center px-3 py-2 text-lg font-mono tracking-widest font-bold border-2 border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900 bg-slate-50 text-slate-900">
       </div>
 
@@ -576,6 +617,32 @@
         </button>
         <button id="confirmAdminPinBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-xs transition">
           Unlock
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================== -->
+  <!-- MODAL 5: DOUBLE-CONFIRMATION + PIN DELETION MODAL   -->
+  <!-- =================================================== -->
+  <div id="secureDeleteModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-red-200 animate-pop text-center">
+      <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">
+        ⚠️
+      </div>
+      <h3 class="text-base font-bold text-slate-900" id="deleteModalTitle">Confirm Deletion</h3>
+      <p class="text-xs text-slate-500 mt-1 mb-4" id="deleteModalSubtitle">This action is permanent. Enter Master PIN to authorize.</p>
+      
+      <div class="mb-4">
+        <input type="password" id="deletePinInput" maxlength="6" placeholder="Enter PIN (7818)" class="w-36 mx-auto text-center px-3 py-2 text-lg font-mono tracking-widest font-bold border-2 border-red-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 bg-red-50/50 text-slate-900">
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button id="cancelSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Cancel
+        </button>
+        <button id="confirmSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-xs transition">
+          Confirm & Delete
         </button>
       </div>
     </div>
@@ -596,13 +663,18 @@
     let currentViewMode = 'table'; // 'table' or 'kanban'
 
     // Secure Master PIN explicitly set to 7818
-    const MASTER_PIN = "7818";
+    let masterAdminPin = localStorage.getItem('crm_admin_pin') || "7818";
     let currentRole = localStorage.getItem('crm_user_role') || 'admin';
 
-    // Support ?role=sales in URL for exclusive one-click bookmark for sales reps!
+    // Support ?role=sales and ?vendors=v1,v2 in URL for exclusive one-click bookmark for sales reps!
     const urlParams = new URLSearchParams(window.location.search);
+    let allowedVendorIds = null; // null means all vendors
+
     if (urlParams.get('role') === 'sales') {
       currentRole = 'sales';
+    }
+    if (urlParams.get('vendors')) {
+      allowedVendorIds = urlParams.get('vendors').split(',').filter(Boolean);
     }
 
     const todayStr = new Date().toISOString().split('T')[0];
@@ -612,12 +684,12 @@
       localStorage.setItem('crm_contacts', JSON.stringify(contacts));
       localStorage.setItem('crm_lost', JSON.stringify(lostContacts));
       localStorage.setItem('crm_user_role', currentRole);
+      localStorage.setItem('crm_admin_pin', masterAdminPin);
     }
 
     function applyRolePermissions() {
       const sidebarTag = document.getElementById('sidebarRoleTag');
       const rolePill = document.getElementById('rolePillStatus');
-      const banner = document.getElementById('salesCloserBanner');
       const adminNavSection = document.getElementById('adminNavSection');
       const headerAddVendorBtn = document.getElementById('headerAddVendorBtn');
       const roleToSalesBtn = document.getElementById('roleToSalesBtn');
@@ -632,13 +704,11 @@
         roleToSalesBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 text-white shadow-xs';
         roleToAdminBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
 
-        banner.classList.remove('hidden');
-
         // Completely hide Admin-only Sidebar controls from Sales Closer
         adminNavSection.classList.add('hidden');
         headerAddVendorBtn.classList.add('hidden');
 
-        if (currentPage === 'finances') {
+        if (currentPage === 'finances' || currentPage === 'permissions') {
           switchPage('pipeline');
         }
       } else {
@@ -649,8 +719,6 @@
 
         roleToAdminBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 text-white shadow-xs';
         roleToSalesBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
-
-        banner.classList.add('hidden');
 
         // Show Admin controls
         adminNavSection.classList.remove('hidden');
@@ -687,12 +755,11 @@
       }
     };
 
-    document.getElementById('unlockAdminBannerBtn').onclick = openAdminPinDialog;
     document.getElementById('cancelAdminPinBtn').onclick = () => document.getElementById('adminPinModal').classList.add('hidden');
 
     document.getElementById('confirmAdminPinBtn').onclick = () => {
       const enteredPin = document.getElementById('adminPinInput').value.trim();
-      if (enteredPin === MASTER_PIN) {
+      if (enteredPin === masterAdminPin) {
         currentRole = 'admin';
         document.getElementById('adminPinModal').classList.add('hidden');
         applyRolePermissions();
@@ -737,17 +804,26 @@
       return `https://wa.me/${valid}?text=${encodeURIComponent(text)}`;
     }
 
+    // Filter Vendors based on allowed permissions (for Sales Reps)
+    function getVisibleVendors() {
+      if (allowedVendorIds && allowedVendorIds.length > 0) {
+        return vendors.filter(v => allowedVendorIds.includes(v.id));
+      }
+      return vendors;
+    }
+
     // Fully Automated & Accurate Nav Renderer
     function renderNav() {
       const wsSelect = document.getElementById('vendorWorkspaceSelect');
       const vSelect = document.getElementById('vendorSelect');
+      const visibleVendors = getVisibleVendors();
       
       // Update Lead Form's vendor dropdown
-      vSelect.innerHTML = vendors.map(v => `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${v.category})</option>`).join('');
+      vSelect.innerHTML = visibleVendors.map(v => `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${v.category})</option>`).join('');
       
-      // Workspace filter: Crystal clear count of vendors AND total leads! Zero confusion!
-      let optionsHtml = `<option value="ALL" ${selectedVendorId === 'ALL' ? 'selected' : ''}>All Vendors (${vendors.length} Vendors • ${contacts.length} Leads)</option>`;
-      vendors.forEach(v => {
+      // Workspace filter
+      let optionsHtml = `<option value="ALL" ${selectedVendorId === 'ALL' ? 'selected' : ''}>All Vendors (${visibleVendors.length} Vendors • ${contacts.length} Leads)</option>`;
+      visibleVendors.forEach(v => {
         const count = contacts.filter(c => c.vendorId === v.id).length;
         optionsHtml += `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${count} Leads)</option>`;
       });
@@ -760,7 +836,9 @@
     }
 
     function getSprintQueue() {
+      const visibleVendors = getVisibleVendors().map(v => v.id);
       return contacts.filter(c => {
+        if (!visibleVendors.includes(c.vendorId)) return false;
         if (selectedVendorId !== 'ALL' && c.vendorId !== selectedVendorId) return false;
         return c.stage !== 'Won' && c.followUpDate && c.followUpDate <= todayStr;
       });
@@ -791,12 +869,13 @@
 
       const q = (document.getElementById('searchInput').value || '').toLowerCase();
       const stageFilter = document.getElementById('stageFilterSelect').value;
+      const visibleVendors = getVisibleVendors().map(v => v.id);
 
       // Update Workspace Heading & Subtext dynamically
       const headingEl = document.getElementById('currentWorkspaceHeading');
       const subEl = document.getElementById('statWorkspaceSub');
       if (selectedVendorId === 'ALL') {
-        headingEl.textContent = `All Vendor Inquiries (${vendors.length} Vendors)`;
+        headingEl.textContent = `All Vendor Inquiries (${getVisibleVendors().length} Vendors)`;
         subEl.textContent = `Across all partner vendors`;
       } else {
         const currV = vendors.find(v => v.id === selectedVendorId);
@@ -804,8 +883,12 @@
         subEl.textContent = currV ? `Dedicated to ${currV.name}` : 'Vendor specific';
       }
 
-      // Scoped leads based on active vendor workspace
-      let scopedContacts = contacts.filter(c => selectedVendorId === 'ALL' || c.vendorId === selectedVendorId);
+      // Scoped leads based on active vendor workspace and allowed access
+      let scopedContacts = contacts.filter(c => {
+        if (!visibleVendors.includes(c.vendorId)) return false;
+        if (selectedVendorId !== 'ALL' && c.vendorId !== selectedVendorId) return false;
+        return true;
+      });
 
       let filtered = scopedContacts.filter(c => {
         if (stageFilter === 'DUE_TODAY' && c.followUpDate !== todayStr) return false;
@@ -815,7 +898,7 @@
         return true;
       });
 
-      // Front desk metrics (Accurately reflecting the chosen vendor workspace)
+      // Front desk metrics
       document.getElementById('statTotalContacts').textContent = scopedContacts.length;
       const won = scopedContacts.filter(c => c.stage === 'Won');
       document.getElementById('statWonCount').textContent = won.length;
@@ -871,7 +954,7 @@
                   </a>` : ''}
                 <button onclick="markLost(${c.id})" class="text-slate-400 hover:text-slate-700">Lost</button>
                 ${currentRole === 'admin' ? 
-                  `<button onclick="deleteContact(${c.id})" class="text-red-500 hover:underline">Delete</button>` : 
+                  `<button onclick="requestSecureDelete('lead', ${c.id}, '${c.name.replace(/'/g, "\\'")}')" class="text-red-500 hover:underline">Delete</button>` : 
                   `<span class="text-slate-300" title="Delete restricted to Admin">Locked</span>`
                 }
               </td>
@@ -1053,19 +1136,72 @@
       }
     };
 
-    window.deleteContact = function(id) {
+    // ========================================================
+    // SECURE 2-STEP DOUBLE CONFIRMATION + PIN DELETION ENGINE
+    // ========================================================
+    let pendingDeletion = null; // { type: 'lead'|'vendor', id: ..., label: ... }
+
+    window.requestSecureDelete = function(type, id, label) {
       if (currentRole !== 'admin') {
-        alert('⛔ Access Denied! Only Admin can delete leads from the database.');
+        alert('⛔ Access Denied! Only Admin can perform deletions.');
         return;
       }
-      if (!confirm('Are you sure you want to permanently delete this lead?')) return;
-      contacts = contacts.filter(c => c.id !== id);
-      saveData();
-      renderPipeline();
-      renderNav();
+      
+      // Step 1: First browser cross-check confirmation
+      const firstCheck = confirm(`[1st Confirmation]: Are you sure you want to delete ${type.toUpperCase()} "${label}"?\n\nClick OK to proceed to Master PIN verification.`);
+      if (!firstCheck) return;
+
+      // Step 2: Open PIN verification modal
+      pendingDeletion = { type, id, label };
+      document.getElementById('deleteModalTitle').textContent = `Authorize ${type === 'lead' ? 'Lead' : 'Vendor'} Deletion`;
+      document.getElementById('deleteModalSubtitle').textContent = `Permanently removing "${label}". Enter Master PIN to confirm.`;
+      document.getElementById('deletePinInput').value = '';
+      document.getElementById('secureDeleteModal').classList.remove('hidden');
+      document.getElementById('deletePinInput').focus();
     };
 
-    // Vendor Management & Deletion
+    document.getElementById('cancelSecureDeleteBtn').onclick = () => {
+      document.getElementById('secureDeleteModal').classList.add('hidden');
+      pendingDeletion = null;
+    };
+
+    document.getElementById('confirmSecureDeleteBtn').onclick = () => {
+      if (!pendingDeletion) return;
+      const enteredPin = document.getElementById('deletePinInput').value.trim();
+      
+      if (enteredPin !== masterAdminPin) {
+        alert('❌ Incorrect PIN! Deletion aborted for security.');
+        return;
+      }
+
+      // PIN is correct, execute actual permanent deletion
+      if (pendingDeletion.type === 'lead') {
+        contacts = contacts.filter(c => c.id !== pendingDeletion.id);
+        alert(`✅ Lead "${pendingDeletion.label}" deleted.`);
+      } else if (pendingDeletion.type === 'vendor') {
+        if (vendors.length <= 1) {
+          alert('You must have at least one vendor partner in the CRM.');
+          document.getElementById('secureDeleteModal').classList.add('hidden');
+          return;
+        }
+        vendors = vendors.filter(v => v.id !== pendingDeletion.id);
+        if (selectedVendorId === pendingDeletion.id) selectedVendorId = 'ALL';
+        alert(`✅ Vendor "${pendingDeletion.label}" deleted.`);
+      }
+
+      saveData();
+      document.getElementById('secureDeleteModal').classList.add('hidden');
+      pendingDeletion = null;
+      renderNav();
+      renderManageVendorsList();
+      renderPipeline();
+    };
+
+    document.getElementById('deletePinInput').addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') document.getElementById('confirmSecureDeleteBtn').click();
+    });
+
+    // Vendor Management Modal
     const manageVendorsModal = document.getElementById('manageVendorsModal');
     
     function renderManageVendorsList() {
@@ -1079,7 +1215,7 @@
               <div class="text-[10px] text-slate-500">${v.category} • ${leadCount} active leads</div>
             </div>
             ${currentRole === 'admin' ? 
-              `<button onclick="deleteVendor('${v.id}')" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white border border-red-200 text-red-600 hover:bg-red-50 transition shadow-2xs">Delete</button>` :
+              `<button onclick="requestSecureDelete('vendor', '${v.id}', '${v.name.replace(/'/g, "\\'")}')" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white border border-red-200 text-red-600 hover:bg-red-50 transition shadow-2xs">Delete</button>` :
               `<span class="text-xs text-slate-400">Admin Only</span>`
             }
           </div>
@@ -1087,33 +1223,13 @@
       }).join('');
     }
 
-    window.deleteVendor = function(vendorId) {
-      if (currentRole !== 'admin') {
-        alert('⛔ Access Denied! Only Admin can delete vendor partners.');
-        return;
-      }
-      if (vendors.length <= 1) {
-        alert('You must have at least one vendor partner in the CRM.');
-        return;
-      }
-      const vendor = vendors.find(v => v.id === vendorId);
-      if (!confirm(`Delete vendor "${vendor ? vendor.name : ''}"? Leads assigned to this vendor will remain in the database.`)) return;
-
-      vendors = vendors.filter(v => v.id !== vendorId);
-      if (selectedVendorId === vendorId) selectedVendorId = 'ALL';
-      saveData();
-      renderNav();
-      renderManageVendorsList();
-      renderPipeline();
-    };
-
     document.getElementById('sideNavVendorsBtn').onclick = () => {
       renderManageVendorsList();
       manageVendorsModal.classList.remove('hidden');
     };
     document.getElementById('closeManageVendorsBtn').onclick = () => manageVendorsModal.classList.add('hidden');
 
-    // Add Vendor Modal Events (Automated & Instant Switch)
+    // Add Vendor Modal Events
     const addVendorModal = document.getElementById('addVendorModal');
     document.getElementById('headerAddVendorBtn').onclick = () => {
       if (currentRole !== 'admin') {
@@ -1132,7 +1248,6 @@
       const newV = { id: 'v_' + Date.now(), name, category: cat };
       
       vendors.push(newV);
-      // Automatically switch workspace to the newly created vendor!
       selectedVendorId = newV.id;
       
       saveData();
@@ -1141,6 +1256,7 @@
       
       renderNav();
       renderPipeline();
+      renderPermissionsSettings();
     };
 
     // Toggle Table vs Kanban
@@ -1331,16 +1447,19 @@
       const pipelineSec = document.getElementById('pipelinePageSection');
       const financeSec = document.getElementById('financePageSection');
       const lostSec = document.getElementById('lostPageSection');
+      const permissionsSec = document.getElementById('permissionsPageSection');
 
       const sidePipeline = document.getElementById('sideNavPipelineBtn');
       const sideFinance = document.getElementById('sideNavFinanceBtn');
       const sideLost = document.getElementById('sideNavLostBtn');
+      const sidePermissions = document.getElementById('sideNavPermissionsBtn');
 
-      [sidePipeline, sideFinance, sideLost].forEach(el => el.classList.remove('active'));
+      [sidePipeline, sideFinance, sideLost, sidePermissions].forEach(el => el.classList.remove('active'));
 
       pipelineSec.classList.add('hidden');
       financeSec.classList.add('hidden');
       lostSec.classList.add('hidden');
+      permissionsSec.classList.add('hidden');
 
       if (page === 'pipeline') {
         pipelineSec.classList.remove('hidden');
@@ -1354,6 +1473,10 @@
         lostSec.classList.remove('hidden');
         sideLost.classList.add('active');
         renderLost();
+      } else if (page === 'permissions') {
+        permissionsSec.classList.remove('hidden');
+        sidePermissions.classList.add('active');
+        renderPermissionsSettings();
       }
     }
 
@@ -1366,6 +1489,62 @@
       switchPage('finances');
     };
     document.getElementById('sideNavLostBtn').onclick = () => switchPage('lost');
+    document.getElementById('sideNavPermissionsBtn').onclick = () => {
+      if (currentRole !== 'admin') {
+        alert('⛔ Access Denied! Access settings are restricted to Admin.');
+        return;
+      }
+      switchPage('permissions');
+    };
+
+    // ==========================================
+    // PERMISSIONS & REPS LINK GENERATOR
+    // ==========================================
+    function renderPermissionsSettings() {
+      const container = document.getElementById('repVendorCheckboxes');
+      container.innerHTML = vendors.map(v => `
+        <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+          <input type="checkbox" value="${v.id}" class="rep-vendor-checkbox rounded text-blue-600 focus:ring-blue-500" checked onchange="updateGeneratedRepLink()">
+          <div>
+            <div class="font-bold text-slate-900">${v.name}</div>
+            <div class="text-[10px] text-slate-500">${v.category}</div>
+          </div>
+        </label>
+      `).join('');
+      updateGeneratedRepLink();
+      document.getElementById('changeMasterPinInput').value = masterAdminPin;
+    }
+
+    window.updateGeneratedRepLink = function() {
+      const checkboxes = document.querySelectorAll('.rep-vendor-checkbox:checked');
+      const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+      const baseUrl = window.location.origin + window.location.pathname;
+
+      if (selectedIds.length === 0) {
+        document.getElementById('generatedRepUrlInput').value = `${baseUrl}?role=sales`;
+      } else {
+        document.getElementById('generatedRepUrlInput').value = `${baseUrl}?role=sales&vendors=${selectedIds.join(',')}`;
+      }
+    };
+
+    document.getElementById('copyRepLinkBtn').onclick = () => {
+      const input = document.getElementById('generatedRepUrlInput');
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        alert('✅ Copied dedicated sales rep link! Send this URL to your closer.');
+      });
+    };
+
+    document.getElementById('saveNewPinBtn').onclick = () => {
+      const newPin = document.getElementById('changeMasterPinInput').value.trim();
+      if (newPin.length < 4) {
+        alert('PIN must be at least 4 digits.');
+        return;
+      }
+      masterAdminPin = newPin;
+      saveData();
+      alert(`✅ Master Admin PIN successfully updated!`);
+    };
 
     function renderFinances() {
       const won = contacts.filter(c => c.stage === 'Won');
@@ -1454,7 +1633,7 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (evt) => {
-        const lines = evt.target.result.split(/\r?\n/).filter(l => l.trim().length > 0);
+        const lines = evt.target.result.split(/\\r?\\n/).filter(l => l.trim().length > 0);
         let imported = 0;
         let newVendorsAdded = 0;
 
@@ -1464,7 +1643,6 @@
 
           const rawVendorName = cols[2] ? cols[2].trim() : "The Wedding Shaire";
           
-          // Automated Vendor Match or Auto-Create:
           let matchedVendor = vendors.find(v => v.name.toLowerCase() === rawVendorName.toLowerCase());
           if (!matchedVendor) {
             matchedVendor = {
@@ -1494,6 +1672,7 @@
         saveData();
         renderNav();
         renderPipeline();
+        renderPermissionsSettings();
         alert(`✅ Imported ${imported} leads successfully!${newVendorsAdded > 0 ? ` Automatically registered ${newVendorsAdded} new vendor(s).` : ''}`);
       };
       reader.readAsText(file);
@@ -1512,7 +1691,7 @@
         `"${c.weddingDate||''}"`, `"${c.venue||''}"`, `"${c.stage||''}"`, c.value||0, (c.value||0)*0.1,
         c.advance||0, Math.max(0, (c.value||0)-(c.advance||0)), `"${c.followUpDate||''}"`
       ]);
-      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\\r\\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
