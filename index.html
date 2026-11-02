@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    body { font-family: 'Inter', sans-serif; background-color: #0f172a; }
     .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -17,405 +17,481 @@
     .animate-pop { animation: popIn 0.15s ease-out forwards; }
     .kanban-card { cursor: grab; transition: transform 0.15s ease, box-shadow 0.15s ease; }
     .kanban-card:active { cursor: grabbing; }
-    .kanban-card.dragging { opacity: 0.4; transform: scale(0.98); }
-    .drag-over { background-color: #e2e8f0 !important; border: 2px dashed #64748b !important; }
+    .kanban-card.dragging { opacity: 0.35; transform: scale(0.97); }
+    .drag-over { background-color: #e2e8f0 !important; border: 2px dashed #3b82f6 !important; }
+    .sidebar-link.active { background-color: #3b82f6; color: #ffffff; font-weight: 600; }
+    .sidebar-link { transition: all 0.15s ease; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen">
-  <div class="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex antialiased">
+
+  <!-- ========================================== -->
+  <!-- PIPEDRIVE-STYLE LEFT SIDEBAR NAVIGATION    -->
+  <!-- ========================================== -->
+  <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-slate-800 select-none">
     
-    <!-- Top Header -->
-    <header class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 pb-5">
-      <div>
-        <div class="flex items-center gap-3">
-          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Wedding Vendor Sales CRM</h1>
-          <!-- Role Indicator Badge -->
-          <span id="roleIndicatorBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-slate-900 text-white">
-            Admin Mode
-          </span>
-        </div>
-        <p class="text-sm text-slate-500 mt-1">Multi-vendor sales operations, client pipelines, and booking directory.</p>
-      </div>
-
-      <!-- Navigation & Controls -->
-      <div class="flex flex-wrap items-center gap-2.5">
-        
-        <!-- Role Mode Switcher (Admin vs Sales Closer) -->
-        <div class="flex items-center bg-white border border-slate-300 rounded-xl p-1 shadow-xs text-xs">
-          <button id="switchSalesBtn" type="button" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition">
-            Sales Closer
-          </button>
-          <button id="switchAdminBtn" type="button" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-xs transition">
-            Admin
-          </button>
-        </div>
-
-        <nav class="inline-flex rounded-xl border border-slate-200 bg-slate-100 p-1 text-xs font-semibold shadow-xs">
-          <button id="navPipelineBtn" type="button" class="px-3.5 py-1.5 rounded-lg transition bg-white text-slate-900 font-bold shadow-sm">Pipeline</button>
-          <button id="navLostBtn" type="button" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">Lost Archive (<span id="navLostCount">0</span>)</button>
-          <button id="navFinanceBtn" type="button" class="px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">Finances & Commission</button>
-        </nav>
-
-        <div id="vendorWorkspaceContainer" class="relative flex items-center bg-white border border-slate-300 rounded-lg shadow-sm px-3 py-1.5">
-          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider mr-2">Vendor:</span>
-          <select id="vendorWorkspaceSelect" class="bg-transparent text-sm font-bold text-slate-900 focus:outline-none cursor-pointer pr-3"></select>
-        </div>
-
-        <button id="manageVendorsBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition shadow-sm">
-          Vendors
-        </button>
-        <button id="addVendorBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-dashed border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 transition shadow-sm">
-          + Add Vendor
-        </button>
-        <input type="file" id="csvFileInput" accept=".csv" class="hidden">
-        <button id="importCsvBtn" type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition shadow-sm">Import CSV</button>
-        <button id="exportCsvBtn" type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition shadow-sm">Export CSV</button>
-      </div>
-    </header>
-
-    <!-- Restricted Sales Closer Notification Banner -->
-    <div id="salesCloserBanner" class="hidden mb-5 p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
+    <!-- Workspace Brand Header -->
+    <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800">
       <div class="flex items-center gap-2.5">
-        <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-        <span><strong>Sales Closer Mode Active:</strong> Focused purely on lead outreach, follow-ups & stage conversion. Agency commissions and deletion permissions are protected.</span>
+        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shadow-sm tracking-wider">
+          W
+        </div>
+        <div>
+          <h2 class="text-xs font-bold text-white tracking-wide uppercase leading-tight">Wedding CRM</h2>
+          <span id="sidebarRoleTag" class="text-[10px] text-emerald-400 font-semibold">Admin Workspace</span>
+        </div>
       </div>
-      <button id="unlockAdminBannerBtn" type="button" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs whitespace-nowrap transition">
-        Admin Unlock (PIN)
+      <button id="quickLockToggleBtn" class="text-xs text-slate-400 hover:text-white transition p-1" title="Switch or Lock Role">
+        🔒
       </button>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: FRONT DESK / PIPELINE (COMMISSION-FREE) -->
-    <!-- ========================================== -->
-    <div id="pipelinePageSection" class="space-y-6">
+    <!-- Navigation Menu Items -->
+    <nav class="flex-1 px-3 py-4 space-y-1.5 text-xs font-medium overflow-y-auto">
       
-      <!-- Follow-Up Power-Sprint Alert Banner -->
-      <div id="sprintAlertBanner" class="p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-lg font-bold">
-            ⚡
-          </div>
-          <div>
-            <div class="font-bold text-sm tracking-wide flex items-center gap-2">
-              <span>Daily Follow-Up Sprint</span>
-              <span id="sprintDueBadge" class="bg-white text-amber-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold shadow-xs">0 Due</span>
-            </div>
-            <p class="text-xs text-white/90 mt-0.5">High-speed sequential outreach with tailored WhatsApp scripts and 1-click snooze.</p>
-          </div>
+      <div class="px-2 pb-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider">Sales Operations</div>
+
+      <!-- Deals / Pipeline -->
+      <button id="sideNavPipelineBtn" type="button" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+        <span class="flex-1 font-semibold">Deals Pipeline</span>
+        <span id="sidePipelineCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-bold">0</span>
+      </button>
+
+      <!-- Follow-Up Sprint -->
+      <button id="sideNavSprintBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left text-amber-300">
+        <svg class="w-4 h-4 shrink-0 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <span class="flex-1 font-semibold text-white">Daily Sprint</span>
+        <span id="sideSprintDueCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">0 Due</span>
+      </button>
+
+      <!-- Lost Repository -->
+      <button id="sideNavLostBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+        <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+        <span class="flex-1">Lost Archive</span>
+        <span id="sideLostCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+      </button>
+
+      <!-- ADMIN ONLY SECTION -->
+      <div id="adminNavSection" class="pt-4 space-y-1.5">
+        <div class="px-2 pb-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center justify-between">
+          <span>Admin Controls</span>
+          <span class="text-[9px] px-1 rounded bg-slate-800 text-slate-400">Protected</span>
         </div>
-        <button id="startSprintBtn" type="button" class="px-5 py-2 rounded-xl text-xs font-bold bg-white text-slate-900 hover:bg-slate-100 shadow-md transition whitespace-nowrap">
-          Launch Sprint Mode →
+
+        <!-- Finances & Commission (Admin Only) -->
+        <button id="sideNavFinanceBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+          <svg class="w-4 h-4 shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span class="flex-1 font-semibold">Finances & 10% Comm</span>
+        </button>
+
+        <!-- Vendor Manager (Admin Only) -->
+        <button id="sideNavVendorsBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+          <svg class="w-4 h-4 shrink-0 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          <span class="flex-1">Manage Vendors (<span id="sideVendorCount">0</span>)</span>
+        </button>
+
+        <!-- CSV Export & Backup (Admin Only) -->
+        <button id="sideExportCsvBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+          <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span class="flex-1">Export Database CSV</span>
         </button>
       </div>
 
-      <!-- Operational Metric Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Active Pipeline Leads</div>
-          <div id="statTotalContacts" class="text-2xl font-bold text-slate-900 mt-2">0</div>
-          <p class="text-[11px] text-slate-400 mt-1">Active client inquiries</p>
+    </nav>
+
+    <!-- Sidebar Bottom: Role State & Switcher -->
+    <div class="p-3 border-t border-slate-800 bg-slate-950/50">
+      <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Active Mode</span>
+          <span id="rolePillStatus" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Admin</span>
         </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Negotiation Pipeline</div>
-          <div id="statPipelineValue" class="text-2xl font-bold text-indigo-600 mt-2">₹0</div>
-          <p class="text-[11px] text-slate-400 mt-1">Potential deal volume</p>
-        </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Won Bookings</div>
-          <div id="statWonCount" class="text-2xl font-bold text-emerald-600 mt-2">0</div>
-          <p class="text-[11px] text-emerald-600 font-medium mt-1" id="statWonSub">₹0 closed volume</p>
-        </div>
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Follow-Ups Due</div>
-          <div id="statFollowUpsDue" class="text-2xl font-bold text-amber-600 mt-2">0</div>
-          <p class="text-[11px] text-amber-700 font-medium mt-1">Pending outreach today</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <!-- Lead Intake Form -->
-        <div class="lg:col-span-1">
-          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm sticky top-6">
-            <h2 class="text-base font-bold text-slate-900 mb-1">New Wedding Lead</h2>
-            <p class="text-xs text-slate-400 mb-4">Fast intake without mandatory constraints.</p>
-            <form id="contactForm" class="space-y-3.5">
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Client Name</label>
-                <input type="text" id="contactName" placeholder="e.g. Priya & Rohan" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Assign Vendor</label>
-                <select id="vendorSelect" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-800"></select>
-              </div>
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone / WhatsApp</label>
-                  <input type="tel" id="contactPhone" placeholder="9876543210" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Instagram</label>
-                  <input type="text" id="instaId" placeholder="@priya" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                </div>
-              </div>
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Wedding Date</label>
-                  <input type="date" id="weddingDate" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-700">
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Venue / City</label>
-                  <input type="text" id="venueLocation" placeholder="Jaipur" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Stage</label>
-                <select id="dealStage" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white font-medium">
-                  <option value="Lead In">Lead In</option>
-                  <option value="Contact Made">Contact Made</option>
-                  <option value="Follow Up">Follow Up</option>
-                  <option value="Meeting Scheduled">Meeting Scheduled</option>
-                  <option value="Contract Shared">Contract Shared</option>
-                  <option value="Won">Won</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Next Follow-Up Date</label>
-                <input type="date" id="followUpDate" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-700">
-              </div>
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Deal Value (₹)</label>
-                  <input type="number" id="dealValue" placeholder="150000" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Advance (₹)</label>
-                  <input type="number" id="advancePaid" placeholder="0" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Requirements / Notes</label>
-                <textarea id="contactNotes" rows="2" placeholder="Bridal shoot, package preferences..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white resize-none"></textarea>
-              </div>
-              <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2 px-4 rounded-lg text-sm transition shadow-sm">Save Wedding Lead</button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Leads Table & Kanban (Front Desk) -->
-        <div class="lg:col-span-3 space-y-4">
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div class="flex items-center gap-3">
-                <h2 id="currentWorkspaceHeading" class="text-base font-bold text-slate-900">All Vendor Inquiries</h2>
-                <div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs">
-                  <button id="toggleTableBtn" type="button" class="px-2.5 py-1 rounded-md font-semibold bg-white text-slate-900 shadow-xs">Table</button>
-                  <button id="toggleKanbanBtn" type="button" class="px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900">Kanban (Drag & Drop)</button>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <select id="stageFilterSelect" class="px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white focus:outline-none font-medium">
-                  <option value="ALL">All Stages</option>
-                  <option value="DUE_TODAY">⚡ Follow-Up Due Today</option>
-                  <option value="OVERDUE">🚨 Overdue Follow-Ups</option>
-                  <option value="Lead In">Lead In</option>
-                  <option value="Contact Made">Contact Made</option>
-                  <option value="Follow Up">Follow Up</option>
-                  <option value="Meeting Scheduled">Meeting Scheduled</option>
-                  <option value="Contract Shared">Contract Shared</option>
-                  <option value="Won">Won</option>
-                </select>
-                <input type="text" id="searchInput" placeholder="Search client, phone, venue..." class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none w-48 sm:w-56">
-              </div>
-            </div>
-
-            <!-- Table View -->
-            <div id="tableViewContainer" class="overflow-x-auto">
-              <table class="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
-                    <th class="py-3 px-4">Client & Vendor</th>
-                    <th class="py-3 px-4">Event & Venue</th>
-                    <th class="py-3 px-4">Follow-Up Schedule</th>
-                    <th class="py-3 px-4">Pipeline Stage</th>
-                    <th class="py-3 px-4 text-right">Deal Value</th>
-                    <th class="py-3 px-4 text-right">Outreach & Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="contactsTableBody" class="divide-y divide-slate-100"></tbody>
-              </table>
-            </div>
-
-            <!-- Kanban View (Interactive Drag & Drop) -->
-            <div id="kanbanViewContainer" class="hidden p-4 bg-slate-50/60 overflow-x-auto">
-              <div class="text-[11px] text-slate-400 mb-2 font-medium">Tip: Drag any lead card and drop it into another stage to instantly advance the pipeline.</div>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 custom-scrollbar min-w-[1050px]">
-                
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Lead In" id="kCol-Lead In">
-                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                    <span>Lead In</span>
-                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                  </div>
-                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
-                </div>
-
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Contact Made" id="kCol-Contact Made">
-                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                    <span>Contact Made</span>
-                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                  </div>
-                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
-                </div>
-
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Follow Up" id="kCol-Follow Up">
-                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                    <span>Follow Up</span>
-                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                  </div>
-                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
-                </div>
-
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Meeting Scheduled" id="kCol-Meeting Scheduled">
-                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                    <span>Meeting Set</span>
-                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                  </div>
-                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
-                </div>
-
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Contract Shared" id="kCol-Contract Shared">
-                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                    <span>Contract Shared</span>
-                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                  </div>
-                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
-                </div>
-
-                <div class="kanban-col bg-emerald-50/70 rounded-xl p-2.5 border border-emerald-200 flex flex-col min-h-[380px]" data-stage="Won" id="kCol-Won">
-                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-200 text-xs font-bold text-emerald-900">
-                    <span>Won Deals</span>
-                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-emerald-800 font-bold">0</span>
-                  </div>
-                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
+        <div class="grid grid-cols-2 gap-1.5 pt-1">
+          <button id="roleToSalesBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+            Sales Closer
+          </button>
+          <button id="roleToAdminBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs">
+            Admin
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 2: FINANCES & COMMISSION (ADMIN ONLY) -->
-    <!-- ========================================== -->
-    <div id="financePageSection" class="hidden space-y-6">
+  </aside>
+
+  <!-- ========================================== -->
+  <!-- MAIN APPLICATION CONTENT AREA              -->
+  <!-- ========================================== -->
+  <main class="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
+    
+    <!-- Top Action Bar -->
+    <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 shadow-2xs">
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Filter Workspace:</span>
+        <div class="relative flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5">
+          <select id="vendorWorkspaceSelect" class="bg-transparent text-xs font-bold text-slate-900 focus:outline-none cursor-pointer pr-3"></select>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <button id="headerAddVendorBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-dashed border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 transition shadow-xs">
+          + Add Vendor
+        </button>
+        <input type="file" id="csvFileInput" accept=".csv" class="hidden">
+        <button id="headerImportCsvBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition shadow-xs">
+          Import CSV
+        </button>
+      </div>
+    </header>
+
+    <div class="p-6 sm:p-8 space-y-6 flex-1">
       
-      <!-- Top Financial Overview -->
-      <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-2xl p-6 text-white shadow-md">
-        <h2 class="text-xl font-bold tracking-tight">Financial Accounts & Commission Hub</h2>
-        <p class="text-xs text-slate-300 mt-1">Exclusive financial management, 10% agency commission, advance receipts, and vendor payouts.</p>
+      <!-- Sales Closer Notice (If Sales Mode is Active) -->
+      <div id="salesCloserBanner" class="hidden p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
+        <div class="flex items-center gap-2.5">
+          <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+          <span><strong>Sales Closer Mode Active:</strong> Focused purely on lead outreach, follow-ups & stage conversion. Agency commissions and deletion permissions are protected.</span>
+        </div>
+        <button id="unlockAdminBannerBtn" type="button" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs whitespace-nowrap transition">
+          Unlock Admin Access
+        </button>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- VIEW 1: PIPELINE / DEALS (COMMISSION FREE) -->
+      <!-- ========================================== -->
+      <div id="pipelinePageSection" class="space-y-6">
         
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-800">
-          <div>
-            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Contracted Volume</div>
-            <div id="finGrossVolume" class="text-2xl font-bold text-white mt-1">₹0</div>
-            <p class="text-[10px] text-slate-400 mt-0.5">Closed deals value</p>
+        <!-- Follow-Up Power-Sprint Alert Banner -->
+        <div id="sprintAlertBanner" class="p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-lg font-bold">
+              ⚡
+            </div>
+            <div>
+              <div class="font-bold text-sm tracking-wide flex items-center gap-2">
+                <span>Daily Follow-Up Sprint</span>
+                <span id="sprintDueBadge" class="bg-white text-amber-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold shadow-xs">0 Due</span>
+              </div>
+              <p class="text-xs text-white/90 mt-0.5">Sequential daily follow-up queue with 1-click tailored WhatsApp pitch scripts.</p>
+            </div>
           </div>
-          <div class="p-3 rounded-xl bg-indigo-950/50 border border-indigo-700/50">
-            <div class="text-[11px] font-semibold uppercase tracking-wider text-indigo-300">Agency Commission (10%)</div>
-            <div id="finAgencyComm" class="text-2xl font-bold text-indigo-400 mt-1">₹0</div>
-            <p class="text-[10px] text-indigo-200 mt-0.5">Earned agency fee</p>
+          <button id="startSprintBtn" type="button" class="px-5 py-2 rounded-xl text-xs font-bold bg-white text-slate-900 hover:bg-slate-100 shadow-md transition whitespace-nowrap">
+            Launch Sprint Mode →
+          </button>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Workspace Leads</div>
+            <div id="statTotalContacts" class="text-2xl font-bold text-slate-900 mt-2">0</div>
+            <p class="text-[11px] text-slate-400 mt-1" id="statWorkspaceSub">Active client inquiries</p>
           </div>
-          <div>
-            <div class="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">Advance Collected</div>
-            <div id="finAdvanceCollected" class="text-2xl font-bold text-emerald-400 mt-1">₹0</div>
-            <p class="text-[10px] text-emerald-300/80 mt-0.5">Cash in hand</p>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Negotiation Pipeline</div>
+            <div id="statPipelineValue" class="text-2xl font-bold text-indigo-600 mt-2">₹0</div>
+            <p class="text-[11px] text-slate-400 mt-1">Potential deal volume</p>
           </div>
-          <div>
-            <div class="text-[11px] font-semibold uppercase tracking-wider text-amber-400">Pending Balance Due</div>
-            <div id="finPendingDue" class="text-2xl font-bold text-amber-400 mt-1">₹0</div>
-            <p class="text-[10px] text-amber-300/80 mt-0.5">Receivables from clients</p>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Won Bookings</div>
+            <div id="statWonCount" class="text-2xl font-bold text-emerald-600 mt-2">0</div>
+            <p class="text-[11px] text-emerald-600 font-medium mt-1" id="statWonSub">₹0 closed volume</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Follow-Ups Due</div>
+            <div id="statFollowUpsDue" class="text-2xl font-bold text-amber-600 mt-2">0</div>
+            <p class="text-[11px] text-amber-700 font-medium mt-1">Pending outreach today</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <!-- Lead Intake Form -->
+          <div class="lg:col-span-1">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm sticky top-6">
+              <h2 class="text-base font-bold text-slate-900 mb-1">New Wedding Lead</h2>
+              <p class="text-xs text-slate-400 mb-4">Fast intake without mandatory constraints.</p>
+              <form id="contactForm" class="space-y-3.5">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Client Name</label>
+                  <input type="text" id="contactName" placeholder="e.g. Priya & Rohan" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Assign Vendor</label>
+                  <select id="vendorSelect" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-800 font-medium"></select>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone / WhatsApp</label>
+                    <input type="tel" id="contactPhone" placeholder="9876543210" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Instagram</label>
+                    <input type="text" id="instaId" placeholder="@priya" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Wedding Date</label>
+                    <input type="date" id="weddingDate" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-700">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Venue / City</label>
+                    <input type="text" id="venueLocation" placeholder="Jaipur" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Stage</label>
+                  <select id="dealStage" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white font-medium">
+                    <option value="Lead In">Lead In</option>
+                    <option value="Contact Made">Contact Made</option>
+                    <option value="Follow Up">Follow Up</option>
+                    <option value="Meeting Scheduled">Meeting Scheduled</option>
+                    <option value="Contract Shared">Contract Shared</option>
+                    <option value="Won">Won</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Next Follow-Up Date</label>
+                  <input type="date" id="followUpDate" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-700">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Deal Value (₹)</label>
+                    <input type="number" id="dealValue" placeholder="150000" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Advance (₹)</label>
+                    <input type="number" id="advancePaid" placeholder="0" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Requirements / Notes</label>
+                  <textarea id="contactNotes" rows="2" placeholder="Bridal shoot, package preferences..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2 px-4 rounded-lg text-sm transition shadow-sm">Save Wedding Lead</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Leads Table & Kanban (Front Desk) -->
+          <div class="lg:col-span-3 space-y-4">
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+              <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <h2 id="currentWorkspaceHeading" class="text-base font-bold text-slate-900">All Vendor Inquiries</h2>
+                  <div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs">
+                    <button id="toggleTableBtn" type="button" class="px-2.5 py-1 rounded-md font-semibold bg-white text-slate-900 shadow-xs">Table</button>
+                    <button id="toggleKanbanBtn" type="button" class="px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900">Kanban (Drag & Drop)</button>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <select id="stageFilterSelect" class="px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white focus:outline-none font-medium">
+                    <option value="ALL">All Stages</option>
+                    <option value="DUE_TODAY">⚡ Follow-Up Due Today</option>
+                    <option value="OVERDUE">🚨 Overdue Follow-Ups</option>
+                    <option value="Lead In">Lead In</option>
+                    <option value="Contact Made">Contact Made</option>
+                    <option value="Follow Up">Follow Up</option>
+                    <option value="Meeting Scheduled">Meeting Scheduled</option>
+                    <option value="Contract Shared">Contract Shared</option>
+                    <option value="Won">Won</option>
+                  </select>
+                  <input type="text" id="searchInput" placeholder="Search client, phone, venue..." class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none w-48 sm:w-56">
+                </div>
+              </div>
+
+              <!-- Table View -->
+              <div id="tableViewContainer" class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
+                      <th class="py-3 px-4">Client & Vendor</th>
+                      <th class="py-3 px-4">Event & Venue</th>
+                      <th class="py-3 px-4">Follow-Up Schedule</th>
+                      <th class="py-3 px-4">Pipeline Stage</th>
+                      <th class="py-3 px-4 text-right">Deal Value</th>
+                      <th class="py-3 px-4 text-right">Outreach & Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="contactsTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
+
+              <!-- Kanban View (Interactive Drag & Drop) -->
+              <div id="kanbanViewContainer" class="hidden p-4 bg-slate-50/60 overflow-x-auto">
+                <div class="text-[11px] text-slate-400 mb-2 font-medium">Tip: Drag any lead card and drop it into another stage to instantly advance the pipeline.</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 custom-scrollbar min-w-[1050px]">
+                  
+                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Lead In" id="kCol-Lead In">
+                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                      <span>Lead In</span>
+                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
+                    </div>
+                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                  </div>
+
+                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Contact Made" id="kCol-Contact Made">
+                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                      <span>Contact Made</span>
+                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
+                    </div>
+                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                  </div>
+
+                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Follow Up" id="kCol-Follow Up">
+                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                      <span>Follow Up</span>
+                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
+                    </div>
+                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                  </div>
+
+                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Meeting Scheduled" id="kCol-Meeting Scheduled">
+                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                      <span>Meeting Set</span>
+                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
+                    </div>
+                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                  </div>
+
+                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Contract Shared" id="kCol-Contract Shared">
+                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                      <span>Contract Shared</span>
+                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
+                    </div>
+                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                  </div>
+
+                  <div class="kanban-col bg-emerald-50/70 rounded-xl p-2.5 border border-emerald-200 flex flex-col min-h-[380px]" data-stage="Won" id="kCol-Won">
+                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-200 text-xs font-bold text-emerald-900">
+                      <span>Won Deals</span>
+                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-emerald-800 font-bold">0</span>
+                    </div>
+                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Vendor Commission Breakdown Table -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-slate-200">
-          <h3 class="text-base font-bold text-slate-900">Vendor Accounts & 10% Commission Split</h3>
-          <p class="text-xs text-slate-500 mt-0.5">Gross sales volume, 10% agency deduction, and 90% net vendor payable.</p>
+      <!-- ========================================== -->
+      <!-- VIEW 2: FINANCES & COMMISSION (ADMIN ONLY) -->
+      <!-- ========================================== -->
+      <div id="financePageSection" class="hidden space-y-6">
+        
+        <!-- Top Financial Overview -->
+        <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-2xl p-6 text-white shadow-md">
+          <h2 class="text-xl font-bold tracking-tight">Financial Accounts & Commission Hub</h2>
+          <p class="text-xs text-slate-300 mt-1">Exclusive financial management, 10% agency commission, advance receipts, and vendor payouts.</p>
+          
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-800">
+            <div>
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Contracted Volume</div>
+              <div id="finGrossVolume" class="text-2xl font-bold text-white mt-1">₹0</div>
+              <p class="text-[10px] text-slate-400 mt-0.5">Closed deals value</p>
+            </div>
+            <div class="p-3 rounded-xl bg-indigo-950/50 border border-indigo-700/50">
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-indigo-300">Agency Commission (10%)</div>
+              <div id="finAgencyComm" class="text-2xl font-bold text-indigo-400 mt-1">₹0</div>
+              <p class="text-[10px] text-indigo-200 mt-0.5">Earned agency fee</p>
+            </div>
+            <div>
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">Advance Collected</div>
+              <div id="finAdvanceCollected" class="text-2xl font-bold text-emerald-400 mt-1">₹0</div>
+              <p class="text-[10px] text-emerald-300/80 mt-0.5">Cash in hand</p>
+            </div>
+            <div>
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-amber-400">Pending Balance Due</div>
+              <div id="finPendingDue" class="text-2xl font-bold text-amber-400 mt-1">₹0</div>
+              <p class="text-[10px] text-amber-300/80 mt-0.5">Receivables from clients</p>
+            </div>
+          </div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
-                <th class="py-3 px-4">Vendor Partner</th>
-                <th class="py-3 px-4">Won Deals</th>
-                <th class="py-3 px-4 text-right">Gross Contracted</th>
-                <th class="py-3 px-4 text-right text-indigo-700 font-bold">Agency Comm (10%)</th>
-                <th class="py-3 px-4 text-right text-slate-700 font-semibold">Vendor Net (90%)</th>
-                <th class="py-3 px-4 text-right text-emerald-700">Advance Paid</th>
-                <th class="py-3 px-4 text-right text-amber-700">Pending Due</th>
-              </tr>
-            </thead>
-            <tbody id="vendorFinancesTableBody" class="divide-y divide-slate-100"></tbody>
-          </table>
+
+        <!-- Vendor Commission Breakdown Table -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-5 border-b border-slate-200">
+            <h3 class="text-base font-bold text-slate-900">Vendor Accounts & 10% Commission Split</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Gross sales volume, 10% agency deduction, and 90% net vendor payable.</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
+                  <th class="py-3 px-4">Vendor Partner</th>
+                  <th class="py-3 px-4">Won Deals</th>
+                  <th class="py-3 px-4 text-right">Gross Contracted</th>
+                  <th class="py-3 px-4 text-right text-indigo-700 font-bold">Agency Comm (10%)</th>
+                  <th class="py-3 px-4 text-right text-slate-700 font-semibold">Vendor Net (90%)</th>
+                  <th class="py-3 px-4 text-right text-emerald-700">Advance Paid</th>
+                  <th class="py-3 px-4 text-right text-amber-700">Pending Due</th>
+                </tr>
+              </thead>
+              <tbody id="vendorFinancesTableBody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Detailed Payment Ledger -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-5 border-b border-slate-200">
+            <h3 class="text-base font-bold text-slate-900">Confirmed Bookings Payment Ledger</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Client-by-client financial breakdown with advance records and commission split.</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
+                  <th class="py-3 px-4">Client & Vendor</th>
+                  <th class="py-3 px-4">Wedding Date</th>
+                  <th class="py-3 px-4 text-right">Total Deal</th>
+                  <th class="py-3 px-4 text-right text-indigo-700 font-bold">10% Commission</th>
+                  <th class="py-3 px-4 text-right text-emerald-700">Advance Paid</th>
+                  <th class="py-3 px-4 text-right text-amber-700">Balance Due</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="finLedgerTableBody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      <!-- Detailed Payment Ledger -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-slate-200">
-          <h3 class="text-base font-bold text-slate-900">Confirmed Bookings Payment Ledger</h3>
-          <p class="text-xs text-slate-500 mt-0.5">Client-by-client financial breakdown with advance records and commission split.</p>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
-                <th class="py-3 px-4">Client & Vendor</th>
-                <th class="py-3 px-4">Wedding Date</th>
-                <th class="py-3 px-4 text-right">Total Deal</th>
-                <th class="py-3 px-4 text-right text-indigo-700 font-bold">10% Commission</th>
-                <th class="py-3 px-4 text-right text-emerald-700">Advance Paid</th>
-                <th class="py-3 px-4 text-right text-amber-700">Balance Due</th>
-                <th class="py-3 px-4 text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody id="finLedgerTableBody" class="divide-y divide-slate-100"></tbody>
-          </table>
+      <!-- ========================================== -->
+      <!-- VIEW 3: LOST ARCHIVE                       -->
+      <!-- ========================================== -->
+      <div id="lostPageSection" class="hidden space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-5 border-b border-slate-200">
+            <h3 class="text-base font-bold text-slate-900">Lost Leads Archive</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Archived dropped inquiries.</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
+                  <th class="py-3 px-4">Client & Vendor</th>
+                  <th class="py-3 px-4">Date & Venue</th>
+                  <th class="py-3 px-4">Contact</th>
+                  <th class="py-3 px-4 text-right">Potential Value</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="lostTableBody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
         </div>
       </div>
+
     </div>
 
-    <!-- ========================================== -->
-    <!-- VIEW 3: LOST ARCHIVE                       -->
-    <!-- ========================================== -->
-    <div id="lostPageSection" class="hidden space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-slate-200">
-          <h3 class="text-base font-bold text-slate-900">Lost Leads Archive</h3>
-          <p class="text-xs text-slate-500 mt-0.5">Archived dropped inquiries.</p>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
-                <th class="py-3 px-4">Client & Vendor</th>
-                <th class="py-3 px-4">Date & Venue</th>
-                <th class="py-3 px-4">Contact</th>
-                <th class="py-3 px-4 text-right">Potential Value</th>
-                <th class="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="lostTableBody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  </main>
 
   <!-- ========================================== -->
   <!-- MODAL 1: DAILY OUTREACH SPRINT POPUP       -->
@@ -438,30 +514,32 @@
   <!-- ========================================== -->
   <div id="addVendorModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-sm w-full p-6 animate-pop">
-      <h3 class="font-bold text-slate-900 text-base mb-4">Add New Vendor</h3>
+      <h3 class="font-bold text-slate-900 text-base mb-4">Add New Vendor Space</h3>
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Vendor Name *</label>
-          <input type="text" id="newVendorName" placeholder="e.g. wetherealstory" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Vendor Brand Name *</label>
+          <input type="text" id="newVendorName" placeholder="e.g. SLC Productions" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Category</label>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Service Category</label>
           <select id="newVendorCategory" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
             <option value="Photographer">Photographer</option>
             <option value="Makeup Artist">Makeup Artist</option>
             <option value="Wedding Decor">Wedding Decor</option>
+            <option value="Mehendi Artist">Mehendi Artist</option>
+            <option value="Other">Other Vendor</option>
           </select>
         </div>
         <div class="flex items-center justify-end gap-2 pt-3">
           <button id="cancelVendorModalBtn" type="button" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cancel</button>
-          <button id="saveVendorBtn" type="button" class="px-4 py-2 text-xs font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm">Add Vendor</button>
+          <button id="saveVendorBtn" type="button" class="px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm">Save & Switch Vendor</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL 3: MANAGE VENDORS (DELETE ONLY ADMIN)-->
+  <!-- MODAL 3: MANAGE VENDORS (ADMIN ONLY)       -->
   <!-- ========================================== -->
   <div id="manageVendorsModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-md w-full p-6 animate-pop">
@@ -477,7 +555,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL 4: ADMIN PIN UNLOCK DIALOG           -->
+  <!-- MODAL 4: ADMIN PIN UNLOCK (SECURE: 7818)   -->
   <!-- ========================================== -->
   <div id="adminPinModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-xs w-full p-6 shadow-2xl border border-slate-200 animate-pop text-center">
@@ -488,8 +566,8 @@
       <p class="text-xs text-slate-500 mt-1 mb-4">Enter Master Admin PIN to unlock full financial access and delete permissions.</p>
       
       <div class="mb-4">
-        <input type="password" id="adminPinInput" maxlength="6" placeholder="Enter PIN" class="w-32 mx-auto text-center px-3 py-2 text-lg font-mono tracking-widest font-bold border-2 border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900 bg-slate-50 text-slate-900">
-        <p class="text-[10px] text-slate-400 mt-1">Default PIN: 1234</p>
+        <!-- Secure Password Input with zero default hints -->
+        <input type="password" id="adminPinInput" maxlength="6" placeholder="••••" class="w-32 mx-auto text-center px-3 py-2 text-lg font-mono tracking-widest font-bold border-2 border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900 bg-slate-50 text-slate-900">
       </div>
 
       <div class="grid grid-cols-2 gap-2">
@@ -517,9 +595,9 @@
     let currentPage = 'pipeline';
     let currentViewMode = 'table'; // 'table' or 'kanban'
 
-    // Role state: 'admin' or 'sales'
+    // Secure Master PIN explicitly set to 7818
+    const MASTER_PIN = "7818";
     let currentRole = localStorage.getItem('crm_user_role') || 'admin';
-    let masterAdminPin = localStorage.getItem('crm_admin_pin') || '1234';
 
     // Support ?role=sales in URL for exclusive one-click bookmark for sales reps!
     const urlParams = new URLSearchParams(window.location.search);
@@ -537,48 +615,52 @@
     }
 
     function applyRolePermissions() {
-      const badge = document.getElementById('roleIndicatorBadge');
-      const salesBtn = document.getElementById('switchSalesBtn');
-      const adminBtn = document.getElementById('switchAdminBtn');
+      const sidebarTag = document.getElementById('sidebarRoleTag');
+      const rolePill = document.getElementById('rolePillStatus');
       const banner = document.getElementById('salesCloserBanner');
-      const navFinanceBtn = document.getElementById('navFinanceBtn');
-      const addVendorBtn = document.getElementById('addVendorBtn');
-      const importCsvBtn = document.getElementById('importCsvBtn');
-      const exportCsvBtn = document.getElementById('exportCsvBtn');
+      const adminNavSection = document.getElementById('adminNavSection');
+      const headerAddVendorBtn = document.getElementById('headerAddVendorBtn');
+      const roleToSalesBtn = document.getElementById('roleToSalesBtn');
+      const roleToAdminBtn = document.getElementById('roleToAdminBtn');
 
       if (currentRole === 'sales') {
-        badge.textContent = 'Sales Closer Mode';
-        badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-blue-600 text-white';
-        salesBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-xs transition';
-        adminBtn.className = 'px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition';
+        sidebarTag.textContent = 'Sales Closer';
+        sidebarTag.className = 'text-[10px] text-blue-400 font-semibold';
+        rolePill.textContent = 'Sales Mode';
+        rolePill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30';
+
+        roleToSalesBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 text-white shadow-xs';
+        roleToAdminBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
+
         banner.classList.remove('hidden');
 
-        // Hide Finances tab from sales reps
-        navFinanceBtn.classList.add('hidden');
-        if (currentPage === 'finances') {
-          document.getElementById('navPipelineBtn').click();
-        }
+        // Completely hide Admin-only Sidebar controls from Sales Closer
+        adminNavSection.classList.add('hidden');
+        headerAddVendorBtn.classList.add('hidden');
 
-        // Restrict bulk delete / export / vendor manipulation
-        exportCsvBtn.classList.add('hidden');
-        addVendorBtn.classList.add('hidden');
+        if (currentPage === 'finances') {
+          switchPage('pipeline');
+        }
       } else {
-        badge.textContent = 'Admin Mode';
-        badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-slate-900 text-white';
-        adminBtn.className = 'px-2.5 py-1 rounded-lg font-bold bg-slate-900 text-white shadow-xs transition';
-        salesBtn.className = 'px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition';
+        sidebarTag.textContent = 'Admin Workspace';
+        sidebarTag.className = 'text-[10px] text-emerald-400 font-semibold';
+        rolePill.textContent = 'Admin Mode';
+        rolePill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+
+        roleToAdminBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 text-white shadow-xs';
+        roleToSalesBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
+
         banner.classList.add('hidden');
 
-        // Full access for Admin
-        navFinanceBtn.classList.remove('hidden');
-        exportCsvBtn.classList.remove('hidden');
-        addVendorBtn.classList.remove('hidden');
+        // Show Admin controls
+        adminNavSection.classList.remove('hidden');
+        headerAddVendorBtn.classList.remove('hidden');
       }
       saveData();
     }
 
-    // Role Switchers
-    document.getElementById('switchSalesBtn').onclick = () => {
+    // Role Switching with 7818 PIN
+    document.getElementById('roleToSalesBtn').onclick = () => {
       currentRole = 'sales';
       applyRolePermissions();
       renderPipeline();
@@ -590,23 +672,33 @@
       document.getElementById('adminPinInput').focus();
     }
 
-    document.getElementById('switchAdminBtn').onclick = () => {
+    document.getElementById('roleToAdminBtn').onclick = () => {
       if (currentRole === 'admin') return;
       openAdminPinDialog();
+    };
+
+    document.getElementById('quickLockToggleBtn').onclick = () => {
+      if (currentRole === 'admin') {
+        currentRole = 'sales';
+        applyRolePermissions();
+        renderPipeline();
+      } else {
+        openAdminPinDialog();
+      }
     };
 
     document.getElementById('unlockAdminBannerBtn').onclick = openAdminPinDialog;
     document.getElementById('cancelAdminPinBtn').onclick = () => document.getElementById('adminPinModal').classList.add('hidden');
 
     document.getElementById('confirmAdminPinBtn').onclick = () => {
-      const pin = document.getElementById('adminPinInput').value.trim();
-      if (pin === masterAdminPin) {
+      const enteredPin = document.getElementById('adminPinInput').value.trim();
+      if (enteredPin === MASTER_PIN) {
         currentRole = 'admin';
         document.getElementById('adminPinModal').classList.add('hidden');
         applyRolePermissions();
         renderPipeline();
       } else {
-        alert('❌ Incorrect Admin PIN. Try again (Default: 1234)');
+        alert('❌ Incorrect Admin PIN.');
       }
     };
 
@@ -645,33 +737,51 @@
       return `https://wa.me/${valid}?text=${encodeURIComponent(text)}`;
     }
 
+    // Fully Automated & Accurate Nav Renderer
     function renderNav() {
       const wsSelect = document.getElementById('vendorWorkspaceSelect');
       const vSelect = document.getElementById('vendorSelect');
       
-      vSelect.innerHTML = vendors.map(v => `<option value="${v.id}">${v.name} (${v.category})</option>`).join('');
-      let optionsHtml = `<option value="ALL" ${selectedVendorId === 'ALL' ? 'selected' : ''}>All Vendors (${contacts.length})</option>`;
+      // Update Lead Form's vendor dropdown
+      vSelect.innerHTML = vendors.map(v => `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${v.category})</option>`).join('');
+      
+      // Workspace filter: Crystal clear count of vendors AND total leads! Zero confusion!
+      let optionsHtml = `<option value="ALL" ${selectedVendorId === 'ALL' ? 'selected' : ''}>All Vendors (${vendors.length} Vendors • ${contacts.length} Leads)</option>`;
       vendors.forEach(v => {
         const count = contacts.filter(c => c.vendorId === v.id).length;
-        optionsHtml += `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${count})</option>`;
+        optionsHtml += `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${count} Leads)</option>`;
       });
       wsSelect.innerHTML = optionsHtml;
-      document.getElementById('navLostCount').textContent = lostContacts.length;
+      
+      // Sidebar counters
+      document.getElementById('sidePipelineCount').textContent = contacts.length;
+      document.getElementById('sideLostCount').textContent = lostContacts.length;
+      document.getElementById('sideVendorCount').textContent = vendors.length;
     }
 
     function getSprintQueue() {
-      return contacts.filter(c => c.stage !== 'Won' && c.followUpDate && c.followUpDate <= todayStr);
+      return contacts.filter(c => {
+        if (selectedVendorId !== 'ALL' && c.vendorId !== selectedVendorId) return false;
+        return c.stage !== 'Won' && c.followUpDate && c.followUpDate <= todayStr;
+      });
     }
 
     function updateSprintBanner() {
       const queue = getSprintQueue();
       const badge = document.getElementById('sprintDueBadge');
+      const sideBadge = document.getElementById('sideSprintDueCount');
+
       badge.textContent = `${queue.length} Due`;
+      sideBadge.textContent = `${queue.length} Due`;
+
       if (queue.length === 0) {
         badge.className = "bg-white text-emerald-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold shadow-xs";
         badge.textContent = "All Done!";
+        sideBadge.className = "text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30";
+        sideBadge.textContent = "0";
       } else {
         badge.className = "bg-white text-amber-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold shadow-xs";
+        sideBadge.className = "text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30";
       }
     }
 
@@ -682,8 +792,22 @@
       const q = (document.getElementById('searchInput').value || '').toLowerCase();
       const stageFilter = document.getElementById('stageFilterSelect').value;
 
-      let filtered = contacts.filter(c => {
-        if (selectedVendorId !== 'ALL' && c.vendorId !== selectedVendorId) return false;
+      // Update Workspace Heading & Subtext dynamically
+      const headingEl = document.getElementById('currentWorkspaceHeading');
+      const subEl = document.getElementById('statWorkspaceSub');
+      if (selectedVendorId === 'ALL') {
+        headingEl.textContent = `All Vendor Inquiries (${vendors.length} Vendors)`;
+        subEl.textContent = `Across all partner vendors`;
+      } else {
+        const currV = vendors.find(v => v.id === selectedVendorId);
+        headingEl.textContent = currV ? `${currV.name} Pipeline` : 'Vendor Pipeline';
+        subEl.textContent = currV ? `Dedicated to ${currV.name}` : 'Vendor specific';
+      }
+
+      // Scoped leads based on active vendor workspace
+      let scopedContacts = contacts.filter(c => selectedVendorId === 'ALL' || c.vendorId === selectedVendorId);
+
+      let filtered = scopedContacts.filter(c => {
         if (stageFilter === 'DUE_TODAY' && c.followUpDate !== todayStr) return false;
         if (stageFilter === 'OVERDUE' && (!c.followUpDate || c.followUpDate >= todayStr || c.stage === 'Won')) return false;
         if (stageFilter !== 'ALL' && stageFilter !== 'DUE_TODAY' && stageFilter !== 'OVERDUE' && c.stage !== stageFilter) return false;
@@ -691,25 +815,25 @@
         return true;
       });
 
-      // Front desk metrics
-      document.getElementById('statTotalContacts').textContent = contacts.length;
-      const won = contacts.filter(c => c.stage === 'Won');
+      // Front desk metrics (Accurately reflecting the chosen vendor workspace)
+      document.getElementById('statTotalContacts').textContent = scopedContacts.length;
+      const won = scopedContacts.filter(c => c.stage === 'Won');
       document.getElementById('statWonCount').textContent = won.length;
       const totalVal = won.reduce((s, c) => s + (Number(c.value)||0), 0);
-      const activeDeals = contacts.filter(c => c.stage !== 'Won');
+      const activeDeals = scopedContacts.filter(c => c.stage !== 'Won');
       const activeVal = activeDeals.reduce((s, c) => s + (Number(c.value)||0), 0);
-      const followUps = contacts.filter(c => c.stage !== 'Won' && c.followUpDate && c.followUpDate <= todayStr);
+      const followUps = scopedContacts.filter(c => c.stage !== 'Won' && c.followUpDate && c.followUpDate <= todayStr);
 
       document.getElementById('statPipelineValue').textContent = '₹' + activeVal.toLocaleString('en-IN');
       document.getElementById('statWonSub').textContent = '₹' + totalVal.toLocaleString('en-IN') + ' closed volume';
       document.getElementById('statFollowUpsDue').textContent = followUps.length;
 
       // ==========================================
-      // RENDER TABLE VIEW (WITH INLINE FOLLOW-UP DATE PICKER)
+      // RENDER TABLE VIEW (WITH INLINE FOLLOW-UP DATE)
       // ==========================================
       const tbody = document.getElementById('contactsTableBody');
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No leads match this view.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No leads found in this view.</td></tr>`;
       } else {
         tbody.innerHTML = filtered.map(c => {
           const badge = getFollowUpBadge(c.followUpDate);
@@ -729,7 +853,6 @@
               <td class="py-3 px-4">
                 <div class="flex items-center gap-1.5">
                   <span class="px-2 py-0.5 rounded text-[10px] ${badge.class}">${badge.text}</span>
-                  <!-- Inline Date Picker: Can change date directly -->
                   <input type="date" value="${c.followUpDate || ''}" onchange="updateLeadFollowUp(${c.id}, this.value)" class="px-1.5 py-0.5 text-[11px] border border-slate-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 cursor-pointer">
                   <button onclick="quickSnooze(${c.id}, 1)" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px]" title="Snooze 1 Day">+1d</button>
                   <button onclick="quickSnooze(${c.id}, 3)" class="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px]" title="Snooze 3 Days">+3d</button>
@@ -747,7 +870,6 @@
                     WhatsApp →
                   </a>` : ''}
                 <button onclick="markLost(${c.id})" class="text-slate-400 hover:text-slate-700">Lost</button>
-                <!-- Delete Button ONLY visible/accessible for Admin -->
                 ${currentRole === 'admin' ? 
                   `<button onclick="deleteContact(${c.id})" class="text-red-500 hover:underline">Delete</button>` : 
                   `<span class="text-slate-300" title="Delete restricted to Admin">Locked</span>`
@@ -789,16 +911,14 @@
                   <span class="text-slate-400 text-[10px] truncate max-w-[90px]">${c.venue || 'Delhi NCR'}</span>
                 </div>
 
-                <!-- Follow-Up Date changer inside Kanban -->
                 <div class="pt-1.5 border-t border-slate-100 flex items-center justify-between gap-1">
                   <div class="flex items-center gap-1">
                     <span class="px-1.5 py-0.2 rounded text-[9px] ${badge.class}">${badge.text}</span>
-                    <input type="date" value="${c.followUpDate || ''}" onchange="updateLeadFollowUp(${c.id}, this.value)" class="text-[10px] border border-slate-200 rounded px-1 py-0.2 bg-slate-50 focus:bg-white cursor-pointer" title="Change follow-up date">
+                    <input type="date" value="${c.followUpDate || ''}" onchange="updateLeadFollowUp(${c.id}, this.value)" class="text-[10px] border border-slate-200 rounded px-1 py-0.2 bg-slate-50 focus:bg-white cursor-pointer">
                   </div>
-                  <button onclick="quickSnooze(${c.id}, 1)" class="px-1.5 py-0.2 rounded bg-slate-100 hover:bg-slate-200 text-[9px] font-bold text-slate-700" title="Snooze 1 Day">+1d</button>
+                  <button onclick="quickSnooze(${c.id}, 1)" class="px-1.5 py-0.2 rounded bg-slate-100 hover:bg-slate-200 text-[9px] font-bold text-slate-700">+1d</button>
                 </div>
 
-                <!-- Card Actions -->
                 <div class="pt-1 flex items-center justify-between">
                   <span class="text-[9px] text-slate-400 font-mono">⋮⋮ Drag</span>
                   <div class="flex items-center gap-1.5">
@@ -815,9 +935,7 @@
       setupKanbanDragAndDrop();
     }
 
-    // ==========================================
-    // NATIVE HTML5 DRAG & DROP FOR KANBAN BOARD
-    // ==========================================
+    // Native HTML5 Drag & Drop
     let draggedLeadId = null;
 
     function setupKanbanDragAndDrop() {
@@ -834,6 +952,7 @@
 
         card.addEventListener('dragend', () => {
           card.classList.remove('dragging');
+          draggedLeadId = null;
           cols.forEach(c => c.classList.remove('drag-over'));
         });
       });
@@ -846,7 +965,6 @@
         });
 
         col.addEventListener('dragleave', (e) => {
-          // Check if leaving column container
           if (!col.contains(e.relatedTarget)) {
             col.classList.remove('drag-over');
           }
@@ -866,11 +984,11 @@
               renderPipeline();
             }
           }
+          draggedLeadId = null;
         });
       });
     }
 
-    // Direct Inline Follow-Up Date Updater (Used in both Table & Kanban)
     window.updateLeadFollowUp = function(id, newDate) {
       const c = contacts.find(x => x.id === id);
       if (c) {
@@ -880,7 +998,6 @@
       }
     };
 
-    // Quick Snooze Helper (+1d, +3d, +7d)
     window.quickSnooze = function(id, days) {
       const c = contacts.find(x => x.id === id);
       if (c) {
@@ -936,7 +1053,6 @@
       }
     };
 
-    // Lead Delete Access (ADMIN ONLY)
     window.deleteContact = function(id) {
       if (currentRole !== 'admin') {
         alert('⛔ Access Denied! Only Admin can delete leads from the database.');
@@ -949,9 +1065,7 @@
       renderNav();
     };
 
-    // ==========================================
-    // VENDOR MANAGEMENT & DELETION (ADMIN ONLY)
-    // ==========================================
+    // Vendor Management & Deletion
     const manageVendorsModal = document.getElementById('manageVendorsModal');
     
     function renderManageVendorsList() {
@@ -993,31 +1107,38 @@
       renderPipeline();
     };
 
-    document.getElementById('manageVendorsBtn').onclick = () => {
+    document.getElementById('sideNavVendorsBtn').onclick = () => {
       renderManageVendorsList();
       manageVendorsModal.classList.remove('hidden');
     };
     document.getElementById('closeManageVendorsBtn').onclick = () => manageVendorsModal.classList.add('hidden');
 
-    // Add Vendor Modal Events
+    // Add Vendor Modal Events (Automated & Instant Switch)
     const addVendorModal = document.getElementById('addVendorModal');
-    document.getElementById('addVendorBtn').onclick = () => {
+    document.getElementById('headerAddVendorBtn').onclick = () => {
       if (currentRole !== 'admin') {
         alert('⛔ Access Denied! Please unlock Admin Mode to add new vendors.');
         return;
       }
       addVendorModal.classList.remove('hidden');
+      document.getElementById('newVendorName').focus();
     };
     document.getElementById('cancelVendorModalBtn').onclick = () => addVendorModal.classList.add('hidden');
+    
     document.getElementById('saveVendorBtn').onclick = () => {
       const name = document.getElementById('newVendorName').value.trim();
-      if (!name) return alert('Enter vendor name');
+      if (!name) return alert('Please enter a vendor business name.');
       const cat = document.getElementById('newVendorCategory').value;
       const newV = { id: 'v_' + Date.now(), name, category: cat };
+      
       vendors.push(newV);
+      // Automatically switch workspace to the newly created vendor!
+      selectedVendorId = newV.id;
+      
       saveData();
       addVendorModal.classList.add('hidden');
       document.getElementById('newVendorName').value = '';
+      
       renderNav();
       renderPipeline();
     };
@@ -1047,7 +1168,7 @@
     function launchSprint() {
       currentSprintQueue = getSprintQueue();
       if (currentSprintQueue.length === 0) {
-        alert("🎉 Awesome! No follow-ups due today. Your pipeline is 100% up to date!");
+        alert("🎉 Awesome! No follow-ups due today in this workspace.");
         return;
       }
       sprintIndex = 0;
@@ -1167,6 +1288,7 @@
     };
 
     document.getElementById('startSprintBtn').onclick = launchSprint;
+    document.getElementById('sideNavSprintBtn').onclick = launchSprint;
     document.getElementById('closeSprintModalBtn').onclick = () => document.getElementById('sprintModal').classList.add('hidden');
 
     // Filter listeners
@@ -1203,43 +1325,47 @@
       renderPipeline();
     };
 
-    // Nav Switchers
-    document.getElementById('navPipelineBtn').onclick = () => {
-      currentPage = 'pipeline';
-      document.getElementById('pipelinePageSection').classList.remove('hidden');
-      document.getElementById('financePageSection').classList.add('hidden');
-      document.getElementById('lostPageSection').classList.add('hidden');
-      document.getElementById('navPipelineBtn').className = "px-3.5 py-1.5 rounded-lg transition bg-white text-slate-900 font-bold shadow-sm";
-      document.getElementById('navFinanceBtn').className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900";
-      document.getElementById('navLostBtn').className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900";
-      renderPipeline();
-    };
+    // Sidebar Navigation Page Switcher
+    function switchPage(page) {
+      currentPage = page;
+      const pipelineSec = document.getElementById('pipelinePageSection');
+      const financeSec = document.getElementById('financePageSection');
+      const lostSec = document.getElementById('lostPageSection');
 
-    document.getElementById('navFinanceBtn').onclick = () => {
+      const sidePipeline = document.getElementById('sideNavPipelineBtn');
+      const sideFinance = document.getElementById('sideNavFinanceBtn');
+      const sideLost = document.getElementById('sideNavLostBtn');
+
+      [sidePipeline, sideFinance, sideLost].forEach(el => el.classList.remove('active'));
+
+      pipelineSec.classList.add('hidden');
+      financeSec.classList.add('hidden');
+      lostSec.classList.add('hidden');
+
+      if (page === 'pipeline') {
+        pipelineSec.classList.remove('hidden');
+        sidePipeline.classList.add('active');
+        renderPipeline();
+      } else if (page === 'finances') {
+        financeSec.classList.remove('hidden');
+        sideFinance.classList.add('active');
+        renderFinances();
+      } else if (page === 'lost') {
+        lostSec.classList.remove('hidden');
+        sideLost.classList.add('active');
+        renderLost();
+      }
+    }
+
+    document.getElementById('sideNavPipelineBtn').onclick = () => switchPage('pipeline');
+    document.getElementById('sideNavFinanceBtn').onclick = () => {
       if (currentRole === 'sales') {
         alert('⛔ Access Denied! Finances and commission split are restricted to Admin.');
         return;
       }
-      currentPage = 'finances';
-      document.getElementById('pipelinePageSection').classList.add('hidden');
-      document.getElementById('financePageSection').classList.remove('hidden');
-      document.getElementById('lostPageSection').classList.add('hidden');
-      document.getElementById('navFinanceBtn').className = "px-3.5 py-1.5 rounded-lg transition bg-white text-slate-900 font-bold shadow-sm";
-      document.getElementById('navPipelineBtn').className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900";
-      document.getElementById('navLostBtn').className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900";
-      renderFinances();
+      switchPage('finances');
     };
-
-    document.getElementById('navLostBtn').onclick = () => {
-      currentPage = 'lost';
-      document.getElementById('pipelinePageSection').classList.add('hidden');
-      document.getElementById('financePageSection').classList.add('hidden');
-      document.getElementById('lostPageSection').classList.remove('hidden');
-      document.getElementById('navLostBtn').className = "px-3.5 py-1.5 rounded-lg transition bg-white text-slate-900 font-bold shadow-sm";
-      document.getElementById('navPipelineBtn').className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900";
-      document.getElementById('navFinanceBtn').className = "px-3.5 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900";
-      renderLost();
-    };
+    document.getElementById('sideNavLostBtn').onclick = () => switchPage('lost');
 
     function renderFinances() {
       const won = contacts.filter(c => c.stage === 'Won');
@@ -1321,22 +1447,40 @@
       `).join('');
     }
 
-    // CSV File Reader
-    document.getElementById('importCsvBtn').onclick = () => document.getElementById('csvFileInput').click();
+    // Fully Automated CSV Importer: Auto-registers new Vendors & maps leads!
+    document.getElementById('headerImportCsvBtn').onclick = () => document.getElementById('csvFileInput').click();
     document.getElementById('csvFileInput').onchange = (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (evt) => {
         const lines = evt.target.result.split(/\r?\n/).filter(l => l.trim().length > 0);
+        let imported = 0;
+        let newVendorsAdded = 0;
+
         for (let i = 1; i < lines.length; i++) {
           const cols = lines[i].split(',').map(c => c.replace(/^["']|["']$/g, '').trim());
           if (!cols[1]) continue;
+
+          const rawVendorName = cols[2] ? cols[2].trim() : "The Wedding Shaire";
+          
+          // Automated Vendor Match or Auto-Create:
+          let matchedVendor = vendors.find(v => v.name.toLowerCase() === rawVendorName.toLowerCase());
+          if (!matchedVendor) {
+            matchedVendor = {
+              id: 'v_' + (Date.now() + i),
+              name: rawVendorName,
+              category: 'Photographer'
+            };
+            vendors.push(matchedVendor);
+            newVendorsAdded++;
+          }
+
           contacts.unshift({
             id: Date.now() + i,
             name: cols[1],
-            vendorId: vendors[0].id,
-            vendorName: cols[2] || vendors[0].name,
+            vendorId: matchedVendor.id,
+            vendorName: matchedVendor.name,
             phone: cols[3] || '',
             instaId: cols[4] || '',
             weddingDate: cols[5] || '',
@@ -1345,16 +1489,18 @@
             followUpDate: cols[12] || todayStr,
             value: parseFloat(cols[8]) || 0
           });
+          imported++;
         }
         saveData();
+        renderNav();
         renderPipeline();
-        alert('CSV Leads Imported Successfully!');
+        alert(`✅ Imported ${imported} leads successfully!${newVendorsAdded > 0 ? ` Automatically registered ${newVendorsAdded} new vendor(s).` : ''}`);
       };
       reader.readAsText(file);
     };
 
     // CSV Export (Admin only)
-    document.getElementById('exportCsvBtn').onclick = () => {
+    document.getElementById('sideExportCsvBtn').onclick = () => {
       if (currentRole !== 'admin') {
         alert('⛔ CSV export is restricted to Admin.');
         return;
