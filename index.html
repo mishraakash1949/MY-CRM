@@ -25,88 +25,68 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex antialiased">
 
-  <!-- ========================================== -->
-  <!-- PIPEDRIVE-STYLE LEFT SIDEBAR NAVIGATION    -->
-  <!-- ========================================== -->
+  <!-- PIPEDRIVE-STYLE LEFT SIDEBAR NAVIGATION -->
   <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-slate-800 select-none">
-    
-    <!-- Workspace Brand Header -->
     <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shadow-sm tracking-wider">
-          W
-        </div>
+        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shadow-sm tracking-wider">W</div>
         <div>
           <h2 class="text-xs font-bold text-white tracking-wide uppercase leading-tight">Wedding CRM</h2>
           <span id="sidebarRoleTag" class="text-[10px] text-emerald-400 font-semibold">Admin Workspace</span>
         </div>
       </div>
-      <button id="quickLockToggleBtn" class="text-xs text-slate-400 hover:text-white transition p-1" title="Switch or Lock Role">
-        🔒
-      </button>
+      <button id="quickLockToggleBtn" class="text-xs text-slate-400 hover:text-white transition p-1" title="Switch or Lock Role">🔒</button>
     </div>
 
-    <!-- Navigation Menu Items -->
     <nav class="flex-1 px-3 py-4 space-y-1.5 text-xs font-medium overflow-y-auto">
-      
       <div class="px-2 pb-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider">Sales Operations</div>
 
-      <!-- Deals / Pipeline -->
       <button id="sideNavPipelineBtn" type="button" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
         <span class="flex-1 font-semibold">Deals Pipeline</span>
         <span id="sidePipelineCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-bold">0</span>
       </button>
 
-      <!-- Follow-Up Sprint -->
       <button id="sideNavSprintBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left text-amber-300">
         <svg class="w-4 h-4 shrink-0 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
         <span class="flex-1 font-semibold text-white">Daily Sprint</span>
         <span id="sideSprintDueCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">0 Due</span>
       </button>
 
-      <!-- Lost Repository -->
       <button id="sideNavLostBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
         <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
         <span class="flex-1">Lost Archive</span>
         <span id="sideLostCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
       </button>
 
-      <!-- ADMIN ONLY SECTION -->
       <div id="adminNavSection" class="pt-4 space-y-1.5">
         <div class="px-2 pb-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center justify-between">
           <span>Admin Controls</span>
           <span class="text-[9px] px-1 rounded bg-slate-800 text-slate-400">Protected</span>
         </div>
 
-        <!-- Finances & Commission (Admin Only) -->
         <button id="sideNavFinanceBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <span class="flex-1 font-semibold">Finances & 10% Comm</span>
         </button>
 
-        <!-- Vendor Manager (Admin Only) -->
         <button id="sideNavVendorsBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
           <span class="flex-1">Manage Vendors (<span id="sideVendorCount">0</span>)</span>
         </button>
 
-        <!-- Access & Permissions Settings (Admin Only) -->
         <button id="sideNavPermissionsBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
           <span class="flex-1">Access & Team Settings</span>
         </button>
 
-        <!-- CSV Export & Backup (Admin Only) -->
         <button id="sideExportCsvBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
           <span class="flex-1">Export Database CSV</span>
         </button>
       </div>
-
     </nav>
 
-    <!-- Sidebar Bottom: Role State & Switcher -->
     <div class="p-3 border-t border-slate-800 bg-slate-950/50">
       <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
         <div class="flex items-center justify-between">
@@ -114,24 +94,15 @@
           <span id="rolePillStatus" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Admin</span>
         </div>
         <div class="grid grid-cols-2 gap-1.5 pt-1">
-          <button id="roleToSalesBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
-            Sales Closer
-          </button>
-          <button id="roleToAdminBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs">
-            Admin
-          </button>
+          <button id="roleToSalesBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition">Sales Closer</button>
+          <button id="roleToAdminBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs">Admin</button>
         </div>
       </div>
     </div>
-
   </aside>
 
-  <!-- ========================================== -->
-  <!-- MAIN APPLICATION CONTENT AREA              -->
-  <!-- ========================================== -->
+  <!-- MAIN APPLICATION CONTENT AREA -->
   <main class="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
-    
-    <!-- Top Action Bar -->
     <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 shadow-2xs">
       <div class="flex items-center gap-3">
         <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Filter Workspace:</span>
@@ -141,6 +112,9 @@
       </div>
 
       <div class="flex items-center gap-2.5">
+        <button id="headerAddLeadBtn" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs">
+          + New Lead
+        </button>
         <button id="headerAddVendorBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-dashed border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 transition shadow-xs">
           + Add Vendor
         </button>
@@ -151,236 +125,155 @@
       </div>
     </header>
 
-    <div class="p-6 sm:p-8 space-y-6 flex-1">
-      
-      <!-- ========================================== -->
-      <!-- VIEW 1: PIPELINE / DEALS (COMMISSION FREE) -->
-      <!-- ========================================== -->
-      <div id="pipelinePageSection" class="space-y-6">
-        
-        <!-- Follow-Up Power-Sprint Alert Banner -->
-        <div id="sprintAlertBanner" class="p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-lg font-bold">
-              ⚡
+    <div class="p-6 sm:p-8 space-y-5 flex-1">
+      <!-- VIEW 1: PIPELINE / DEALS (FULL WIDTH) -->
+      <div id="pipelinePageSection" class="space-y-4">
+        <!-- Compact Daily Follow-Up Sprint Strip -->
+        <div id="sprintAlertBanner" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-xs flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-6 h-6 rounded-lg bg-white/20 backdrop-blur-xs flex items-center justify-center text-xs font-bold shrink-0">⚡</span>
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="font-bold text-xs tracking-wide">Daily Follow-Up Sprint</span>
+              <span id="sprintDueBadge" class="bg-white text-amber-900 text-[10px] px-2 py-0.5 rounded-full font-extrabold shadow-2xs shrink-0">0 Due</span>
             </div>
-            <div>
-              <div class="font-bold text-sm tracking-wide flex items-center gap-2">
-                <span>Daily Follow-Up Sprint</span>
-                <span id="sprintDueBadge" class="bg-white text-amber-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold shadow-xs">0 Due</span>
-              </div>
-              <p class="text-xs text-white/90 mt-0.5">Sequential daily follow-up queue with 1-click tailored WhatsApp pitch scripts.</p>
-            </div>
+            <span class="hidden md:inline text-[11px] text-white/80 truncate">• 1-click tailored WhatsApp pitch scripts</span>
           </div>
-          <button id="startSprintBtn" type="button" class="px-5 py-2 rounded-xl text-xs font-bold bg-white text-slate-900 hover:bg-slate-100 shadow-md transition whitespace-nowrap">
-            Launch Sprint Mode →
+          <button id="startSprintBtn" type="button" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-900 hover:bg-slate-100 shadow-xs transition whitespace-nowrap shrink-0">
+            Launch Sprint →
           </button>
         </div>
 
-        <!-- Metric Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Workspace Leads</div>
-            <div id="statTotalContacts" class="text-2xl font-bold text-slate-900 mt-2">0</div>
-            <p class="text-[11px] text-slate-400 mt-1" id="statWorkspaceSub">Active client inquiries</p>
+        <!-- Compact Metric Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Workspace Leads</div>
+            <div id="statTotalContacts" class="text-xl font-bold text-slate-900 mt-1">0</div>
+            <p class="text-[10px] text-slate-400 mt-0.5" id="statWorkspaceSub">Active client inquiries</p>
           </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Negotiation Pipeline</div>
-            <div id="statPipelineValue" class="text-2xl font-bold text-indigo-600 mt-2">₹0</div>
-            <p class="text-[11px] text-slate-400 mt-1">Potential deal volume</p>
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Negotiation Pipeline</div>
+            <div id="statPipelineValue" class="text-xl font-bold text-indigo-600 mt-1">₹0</div>
+            <p class="text-[10px] text-slate-400 mt-0.5">Potential deal volume</p>
           </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Won Bookings</div>
-            <div id="statWonCount" class="text-2xl font-bold text-emerald-600 mt-2">0</div>
-            <p class="text-[11px] text-emerald-600 font-medium mt-1" id="statWonSub">₹0 closed volume</p>
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Won Bookings</div>
+            <div id="statWonCount" class="text-xl font-bold text-emerald-600 mt-1">0</div>
+            <p class="text-[10px] text-emerald-600 font-medium mt-0.5" id="statWonSub">₹0 closed volume</p>
           </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Follow-Ups Due</div>
-            <div id="statFollowUpsDue" class="text-2xl font-bold text-amber-600 mt-2">0</div>
-            <p class="text-[11px] text-amber-700 font-medium mt-1">Pending outreach today</p>
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Follow-Ups Due</div>
+            <div id="statFollowUpsDue" class="text-xl font-bold text-amber-600 mt-1">0</div>
+            <p class="text-[10px] text-amber-700 font-medium mt-0.5">Pending outreach today</p>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <!-- Lead Intake Form -->
-          <div class="lg:col-span-1">
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm sticky top-6">
-              <h2 class="text-base font-bold text-slate-900 mb-1">New Wedding Lead</h2>
-              <p class="text-xs text-slate-400 mb-4">Fast intake without mandatory constraints.</p>
-              <form id="contactForm" class="space-y-3.5">
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Client Name</label>
-                  <input type="text" id="contactName" placeholder="e.g. Priya & Rohan" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+        <!-- EXPANSIVE FULL-WIDTH TABLE & KANBAN -->
+        <div class="w-full">
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <h2 id="currentWorkspaceHeading" class="text-base font-bold text-slate-900">All Vendor Inquiries</h2>
+                <div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs">
+                  <button id="toggleTableBtn" type="button" class="px-2.5 py-1 rounded-md font-semibold bg-white text-slate-900 shadow-xs">Table</button>
+                  <button id="toggleKanbanBtn" type="button" class="px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900">Kanban (Drag & Drop)</button>
                 </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Assign Vendor</label>
-                  <select id="vendorSelect" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-800 font-medium"></select>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone / WhatsApp</label>
-                    <input type="tel" id="contactPhone" placeholder="9876543210" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Instagram</label>
-                    <input type="text" id="instaId" placeholder="@priya" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                  </div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Wedding Date</label>
-                    <input type="date" id="weddingDate" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-700">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Venue / City</label>
-                    <input type="text" id="venueLocation" placeholder="Jaipur" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                  </div>
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Stage</label>
-                  <select id="dealStage" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white font-medium">
-                    <option value="Lead In">Lead In</option>
-                    <option value="Contact Made">Contact Made</option>
-                    <option value="Follow Up">Follow Up</option>
-                    <option value="Meeting Scheduled">Meeting Scheduled</option>
-                    <option value="Contract Shared">Contract Shared</option>
-                    <option value="Won">Won</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Next Follow-Up Date</label>
-                  <input type="date" id="followUpDate" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-700">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Deal Value (₹)</label>
-                    <input type="number" id="dealValue" placeholder="150000" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Advance (₹)</label>
-                    <input type="number" id="advancePaid" placeholder="0" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
-                  </div>
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Requirements / Notes</label>
-                  <textarea id="contactNotes" rows="2" placeholder="Bridal shoot, package preferences..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white resize-none"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2 px-4 rounded-lg text-sm transition shadow-sm">Save Wedding Lead</button>
-              </form>
+              </div>
+              
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="toolbarAddLeadBtn" type="button" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-2xs transition">
+                  <span>+</span> New Lead
+                </button>
+                <select id="stageFilterSelect" class="px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white focus:outline-none font-medium">
+                  <option value="ALL">All Stages</option>
+                  <option value="DUE_TODAY">⚡ Follow-Up Due Today</option>
+                  <option value="OVERDUE">🚨 Overdue Follow-Ups</option>
+                  <option value="Lead In">Lead In</option>
+                  <option value="Contact Made">Contact Made</option>
+                  <option value="Follow Up">Follow Up</option>
+                  <option value="Meeting Scheduled">Meeting Scheduled</option>
+                  <option value="Contract Shared">Contract Shared</option>
+                  <option value="Won">Won</option>
+                </select>
+                <input type="text" id="searchInput" placeholder="Search client, phone, venue..." class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none w-44 sm:w-56">
+              </div>
             </div>
-          </div>
 
-          <!-- Leads Table & Kanban (Front Desk) -->
-          <div class="lg:col-span-3 space-y-4">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-              <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div class="flex items-center gap-3">
-                  <h2 id="currentWorkspaceHeading" class="text-base font-bold text-slate-900">All Vendor Inquiries</h2>
-                  <div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs">
-                    <button id="toggleTableBtn" type="button" class="px-2.5 py-1 rounded-md font-semibold bg-white text-slate-900 shadow-xs">Table</button>
-                    <button id="toggleKanbanBtn" type="button" class="px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900">Kanban (Drag & Drop)</button>
+            <!-- Table View -->
+            <div id="tableViewContainer" class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
+                    <th class="py-3 px-4">Client & Vendor</th>
+                    <th class="py-3 px-4">Event & Venue</th>
+                    <th class="py-3 px-4">Follow-Up Schedule</th>
+                    <th class="py-3 px-4">Pipeline Stage</th>
+                    <th class="py-3 px-4 text-right">Deal Value</th>
+                    <th class="py-3 px-4 text-right">Outreach & Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="contactsTableBody" class="divide-y divide-slate-100"></tbody>
+              </table>
+            </div>
+
+            <!-- Kanban View (Spacious full width columns) -->
+            <div id="kanbanViewContainer" class="hidden p-4 bg-slate-50/60 overflow-x-auto">
+              <div class="text-[11px] text-slate-400 mb-2.5 font-medium">Tip: Drag any lead card and drop it into another stage to instantly advance the pipeline.</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5 custom-scrollbar min-w-[1100px]">
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Lead In" id="kCol-Lead In">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                    <span>Lead In</span>
+                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
                   </div>
+                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
-                <div class="flex items-center gap-2">
-                  <select id="stageFilterSelect" class="px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white focus:outline-none font-medium">
-                    <option value="ALL">All Stages</option>
-                    <option value="DUE_TODAY">⚡ Follow-Up Due Today</option>
-                    <option value="OVERDUE">🚨 Overdue Follow-Ups</option>
-                    <option value="Lead In">Lead In</option>
-                    <option value="Contact Made">Contact Made</option>
-                    <option value="Follow Up">Follow Up</option>
-                    <option value="Meeting Scheduled">Meeting Scheduled</option>
-                    <option value="Contract Shared">Contract Shared</option>
-                    <option value="Won">Won</option>
-                  </select>
-                  <input type="text" id="searchInput" placeholder="Search client, phone, venue..." class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none w-48 sm:w-56">
+
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Contact Made" id="kCol-Contact Made">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                    <span>Contact Made</span>
+                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
+                  </div>
+                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
-              </div>
 
-              <!-- Table View -->
-              <div id="tableViewContainer" class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider border-b border-slate-200 font-semibold">
-                      <th class="py-3 px-4">Client & Vendor</th>
-                      <th class="py-3 px-4">Event & Venue</th>
-                      <th class="py-3 px-4">Follow-Up Schedule</th>
-                      <th class="py-3 px-4">Pipeline Stage</th>
-                      <th class="py-3 px-4 text-right">Deal Value</th>
-                      <th class="py-3 px-4 text-right">Outreach & Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="contactsTableBody" class="divide-y divide-slate-100"></tbody>
-                </table>
-              </div>
-
-              <!-- Kanban View (Interactive Drag & Drop) -->
-              <div id="kanbanViewContainer" class="hidden p-4 bg-slate-50/60 overflow-x-auto">
-                <div class="text-[11px] text-slate-400 mb-2 font-medium">Tip: Drag any lead card and drop it into another stage to instantly advance the pipeline.</div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 custom-scrollbar min-w-[1050px]">
-                  
-                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Lead In" id="kCol-Lead In">
-                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                      <span>Lead In</span>
-                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                    </div>
-                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Follow Up" id="kCol-Follow Up">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                    <span>Follow Up</span>
+                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
                   </div>
+                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                </div>
 
-                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Contact Made" id="kCol-Contact Made">
-                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                      <span>Contact Made</span>
-                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                    </div>
-                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Meeting Scheduled" id="kCol-Meeting Scheduled">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                    <span>Meeting Set</span>
+                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
                   </div>
+                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                </div>
 
-                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Follow Up" id="kCol-Follow Up">
-                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                      <span>Follow Up</span>
-                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                    </div>
-                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Contract Shared" id="kCol-Contract Shared">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
+                    <span>Contract Shared</span>
+                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
                   </div>
+                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                </div>
 
-                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Meeting Scheduled" id="kCol-Meeting Scheduled">
-                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                      <span>Meeting Set</span>
-                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                    </div>
-                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+                <div class="kanban-col bg-emerald-50/70 rounded-xl p-3 border border-emerald-200 flex flex-col min-h-[420px]" data-stage="Won" id="kCol-Won">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-200 text-xs font-bold text-emerald-900">
+                    <span>Won Deals</span>
+                    <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-emerald-800 font-bold">0</span>
                   </div>
-
-                  <div class="kanban-col bg-slate-100/80 rounded-xl p-2.5 border border-slate-200 flex flex-col min-h-[380px]" data-stage="Contract Shared" id="kCol-Contract Shared">
-                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
-                      <span>Contract Shared</span>
-                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
-                    </div>
-                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
-                  </div>
-
-                  <div class="kanban-col bg-emerald-50/70 rounded-xl p-2.5 border border-emerald-200 flex flex-col min-h-[380px]" data-stage="Won" id="kCol-Won">
-                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-200 text-xs font-bold text-emerald-900">
-                      <span>Won Deals</span>
-                      <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-emerald-800 font-bold">0</span>
-                    </div>
-                    <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
-                  </div>
-
+                  <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ========================================== -->
       <!-- VIEW 2: FINANCES & COMMISSION (ADMIN ONLY) -->
-      <!-- ========================================== -->
       <div id="financePageSection" class="hidden space-y-6">
-        
-        <!-- Top Financial Overview -->
         <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-2xl p-6 text-white shadow-md">
           <h2 class="text-xl font-bold tracking-tight">Financial Accounts & Commission Hub</h2>
           <p class="text-xs text-slate-300 mt-1">Exclusive financial management, 10% agency commission, advance receipts, and vendor payouts.</p>
@@ -409,7 +302,6 @@
           </div>
         </div>
 
-        <!-- Vendor Commission Breakdown Table -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="p-5 border-b border-slate-200">
             <h3 class="text-base font-bold text-slate-900">Vendor Accounts & 10% Commission Split</h3>
@@ -433,7 +325,6 @@
           </div>
         </div>
 
-        <!-- Detailed Payment Ledger -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="p-5 border-b border-slate-200">
             <h3 class="text-base font-bold text-slate-900">Confirmed Bookings Payment Ledger</h3>
@@ -458,12 +349,8 @@
         </div>
       </div>
 
-      <!-- ========================================== -->
-      <!-- VIEW 3: LOST ARCHIVE (WITH REASON & NOTES) -->
-      <!-- ========================================== -->
+      <!-- VIEW 3: LOST ARCHIVE -->
       <div id="lostPageSection" class="hidden space-y-6">
-        
-        <!-- Summary Cards for Lost Leads -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Archived Lost Deals</div>
@@ -520,9 +407,7 @@
         </div>
       </div>
 
-      <!-- ========================================== -->
-      <!-- VIEW 4: ACCESS & TEAM SETTINGS (NEW!)      -->
-      <!-- ========================================== -->
+      <!-- VIEW 4: ACCESS & TEAM SETTINGS -->
       <div id="permissionsPageSection" class="hidden space-y-6">
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
           <div class="border-b border-slate-100 pb-4">
@@ -530,7 +415,6 @@
             <p class="text-xs text-slate-500 mt-1">Configure which sales reps can see which photographers or makeup artists, and generate restricted links.</p>
           </div>
 
-          <!-- Section 1: Sales Rep Generator -->
           <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
             <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
               <span>🔗</span> Generate Dedicated Sales Rep Link (Restricted to Specific Vendors)
@@ -539,9 +423,7 @@
 
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Allowed Vendors for this Rep:</label>
-              <div id="repVendorCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-                <!-- Checkboxes populated via JS -->
-              </div>
+              <div id="repVendorCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs"></div>
             </div>
 
             <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-2">
@@ -552,7 +434,6 @@
             </div>
           </div>
 
-          <!-- Section 2: Master Security PIN Settings -->
           <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
             <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
               <span>🔐</span> Master Security PIN Settings
@@ -568,14 +449,97 @@
           </div>
         </div>
       </div>
-
     </div>
-
   </main>
 
-  <!-- ========================================== -->
-  <!-- MODAL 1: DAILY OUTREACH SPRINT POPUP       -->
-  <!-- ========================================== -->
+  <!-- MODAL 0: NEW WEDDING LEAD POPUP (Compact Modal) -->
+  <div id="addLeadModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-pop">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">New Wedding Lead</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Quick lead intake & date booking without mandatory constraints.</p>
+        </div>
+        <button id="closeAddLeadModalBtn" type="button" class="text-slate-400 hover:text-slate-600 text-lg font-bold p-1">✕</button>
+      </div>
+
+      <form id="contactForm" class="space-y-3.5 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Client Name</label>
+            <input type="text" id="contactName" placeholder="e.g. Priya & Rohan" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Assign Vendor</label>
+            <select id="vendorSelect" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-800 font-medium"></select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone / WhatsApp</label>
+            <input type="tel" id="contactPhone" placeholder="9876543210" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Instagram</label>
+            <input type="text" id="instaId" placeholder="@priya" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Wedding Date</label>
+            <input type="date" id="weddingDate" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-700">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Venue / City</label>
+            <input type="text" id="venueLocation" placeholder="Jaipur" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Pipeline Stage</label>
+            <select id="dealStage" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white font-medium">
+              <option value="Lead In">Lead In</option>
+              <option value="Contact Made">Contact Made</option>
+              <option value="Follow Up">Follow Up</option>
+              <option value="Meeting Scheduled">Meeting Scheduled</option>
+              <option value="Contract Shared">Contract Shared</option>
+              <option value="Won">Won</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Next Follow-Up Date</label>
+            <input type="date" id="followUpDate" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white text-slate-700">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Package Value (₹)</label>
+            <input type="number" id="dealValue" placeholder="150000" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Advance Received (₹)</label>
+            <input type="number" id="advancePaid" placeholder="0" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 uppercase tracking-wider mb-1">Requirements / Client Notes</label>
+          <textarea id="contactNotes" rows="2" placeholder="Bridal shoot, pre-wedding requirements, crew preferences..." class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white resize-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <button id="cancelAddLeadBtn" type="button" class="px-4 py-2 font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition">Cancel</button>
+          <button type="submit" class="px-5 py-2 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition">Save Wedding Lead</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 1: SPRINT POPUP -->
   <div id="sprintModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-xl w-full p-6 animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -589,9 +553,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL 2: ADD VENDOR MODAL                  -->
-  <!-- ========================================== -->
+  <!-- MODAL 2: ADD VENDOR MODAL -->
   <div id="addVendorModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-sm w-full p-6 animate-pop">
       <h3 class="font-bold text-slate-900 text-base mb-4">Add New Vendor Space</h3>
@@ -618,9 +580,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL 3: MANAGE VENDORS                    -->
-  <!-- ========================================== -->
+  <!-- MODAL 3: MANAGE VENDORS -->
   <div id="manageVendorsModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-md w-full p-6 animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -634,64 +594,39 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL 4: ADMIN PIN UNLOCK (SECURE: 7818)   -->
-  <!-- ========================================== -->
+  <!-- MODAL 4: ADMIN PIN UNLOCK -->
   <div id="adminPinModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-xs w-full p-6 shadow-2xl border border-slate-200 animate-pop text-center">
-      <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-900 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">
-        🔒
-      </div>
+      <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-900 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">🔒</div>
       <h3 class="text-base font-bold text-slate-900">Admin Authentication</h3>
       <p class="text-xs text-slate-500 mt-1 mb-4">Enter Master Admin PIN to unlock full financial access and delete permissions.</p>
-      
       <div class="mb-4">
-        <!-- Secure Password Input with zero default hints -->
         <input type="password" id="adminPinInput" maxlength="6" placeholder="••••" class="w-32 mx-auto text-center px-3 py-2 text-lg font-mono tracking-widest font-bold border-2 border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900 bg-slate-50 text-slate-900">
       </div>
-
       <div class="grid grid-cols-2 gap-2">
-        <button id="cancelAdminPinBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-          Cancel
-        </button>
-        <button id="confirmAdminPinBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-xs transition">
-          Unlock
-        </button>
+        <button id="cancelAdminPinBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Cancel</button>
+        <button id="confirmAdminPinBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-xs transition">Unlock</button>
       </div>
     </div>
   </div>
 
-  <!-- =================================================== -->
-  <!-- MODAL 5: DOUBLE-CONFIRMATION + PIN DELETION MODAL   -->
-  <!-- =================================================== -->
+  <!-- MODAL 5: DOUBLE-CONFIRMATION + PIN DELETION MODAL -->
   <div id="secureDeleteModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-red-200 animate-pop text-center">
-      <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">
-        ⚠️
-      </div>
+      <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">⚠️</div>
       <h3 class="text-base font-bold text-slate-900" id="deleteModalTitle">Confirm Deletion</h3>
       <p class="text-xs text-slate-500 mt-1 mb-4" id="deleteModalSubtitle">This action is permanent. Enter Master PIN to authorize.</p>
-      
       <div class="mb-4">
         <input type="password" id="deletePinInput" maxlength="6" placeholder="Enter PIN (7818)" class="w-36 mx-auto text-center px-3 py-2 text-lg font-mono tracking-widest font-bold border-2 border-red-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 bg-red-50/50 text-slate-900">
       </div>
-
       <div class="grid grid-cols-2 gap-2">
-        <button id="cancelSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-          Cancel
-        </button>
-        <button id="confirmSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-xs transition">
-          Confirm & Delete
-        </button>
+        <button id="cancelSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Cancel</button>
+        <button id="confirmSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-xs transition">Confirm & Delete</button>
       </div>
     </div>
   </div>
 
-  
-
-  <!-- =================================================== -->
-  <!-- MODAL 6: MARK LOST REASON & REMARKS MODAL           -->
-  <!-- =================================================== -->
+  <!-- MODAL 6: MARK LOST REASON & REMARKS MODAL -->
   <div id="markLostModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -715,7 +650,6 @@
           </select>
         </div>
 
-        <!-- Conditional Client Target Budget Input -->
         <div id="lostBudgetBox" class="p-3 bg-amber-50/70 border border-amber-200 rounded-xl space-y-1">
           <label class="block font-bold text-amber-900 uppercase tracking-wider text-[11px]">What was the client's actual budget? (₹)</label>
           <input type="number" id="lostClientBudgetInput" placeholder="e.g. 100000" class="w-full px-3 py-1.5 text-xs border border-amber-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-amber-500">
@@ -747,22 +681,16 @@
     let lostContacts = JSON.parse(localStorage.getItem('crm_lost') || '[]');
     let selectedVendorId = 'ALL';
     let currentPage = 'pipeline';
-    let currentViewMode = 'table'; // 'table' or 'kanban'
+    let currentViewMode = 'table';
 
-    // Secure Master PIN explicitly set to 7818
     let masterAdminPin = localStorage.getItem('crm_admin_pin') || "7818";
     let currentRole = localStorage.getItem('crm_user_role') || 'admin';
 
-    // Support ?role=sales and ?vendors=v1,v2 in URL for exclusive one-click bookmark for sales reps!
     const urlParams = new URLSearchParams(window.location.search);
-    let allowedVendorIds = null; // null means all vendors
+    let allowedVendorIds = null;
 
-    if (urlParams.get('role') === 'sales') {
-      currentRole = 'sales';
-    }
-    if (urlParams.get('vendors')) {
-      allowedVendorIds = urlParams.get('vendors').split(',').filter(Boolean);
-    }
+    if (urlParams.get('role') === 'sales') currentRole = 'sales';
+    if (urlParams.get('vendors')) allowedVendorIds = urlParams.get('vendors').split(',').filter(Boolean);
 
     const todayStr = new Date().toISOString().split('T')[0];
 
@@ -791,13 +719,10 @@
         roleToSalesBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 text-white shadow-xs';
         roleToAdminBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
 
-        // Completely hide Admin-only Sidebar controls from Sales Closer
         adminNavSection.classList.add('hidden');
         headerAddVendorBtn.classList.add('hidden');
 
-        if (currentPage === 'finances' || currentPage === 'permissions') {
-          switchPage('pipeline');
-        }
+        if (currentPage === 'finances' || currentPage === 'permissions') switchPage('pipeline');
       } else {
         sidebarTag.textContent = 'Admin Workspace';
         sidebarTag.className = 'text-[10px] text-emerald-400 font-semibold';
@@ -807,14 +732,12 @@
         roleToAdminBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 text-white shadow-xs';
         roleToSalesBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
 
-        // Show Admin controls
         adminNavSection.classList.remove('hidden');
         headerAddVendorBtn.classList.remove('hidden');
       }
       saveData();
     }
 
-    // Role Switching with 7818 PIN
     document.getElementById('roleToSalesBtn').onclick = () => {
       currentRole = 'sales';
       applyRolePermissions();
@@ -886,12 +809,11 @@
     }
 
     function getWhatsAppUrl(phone, text) {
-      const clean = (phone || '').replace(/\D/g, '');
+      const clean = (phone || '').replace(/\\D/g, '');
       const valid = clean.length === 10 ? '91' + clean : clean;
       return `https://wa.me/${valid}?text=${encodeURIComponent(text)}`;
     }
 
-    // Filter Vendors based on allowed permissions (for Sales Reps)
     function getVisibleVendors() {
       if (allowedVendorIds && allowedVendorIds.length > 0) {
         return vendors.filter(v => allowedVendorIds.includes(v.id));
@@ -899,16 +821,15 @@
       return vendors;
     }
 
-    // Fully Automated & Accurate Nav Renderer
     function renderNav() {
       const wsSelect = document.getElementById('vendorWorkspaceSelect');
       const vSelect = document.getElementById('vendorSelect');
       const visibleVendors = getVisibleVendors();
       
-      // Update Lead Form's vendor dropdown
-      vSelect.innerHTML = visibleVendors.map(v => `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${v.category})</option>`).join('');
+      if (vSelect) {
+        vSelect.innerHTML = visibleVendors.map(v => `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${v.category})</option>`).join('');
+      }
       
-      // Workspace filter
       let optionsHtml = `<option value="ALL" ${selectedVendorId === 'ALL' ? 'selected' : ''}>All Vendors (${visibleVendors.length} Vendors • ${contacts.length} Leads)</option>`;
       visibleVendors.forEach(v => {
         const count = contacts.filter(c => c.vendorId === v.id).length;
@@ -916,7 +837,6 @@
       });
       wsSelect.innerHTML = optionsHtml;
       
-      // Sidebar counters
       document.getElementById('sidePipelineCount').textContent = contacts.length;
       document.getElementById('sideLostCount').textContent = lostContacts.length;
       document.getElementById('sideVendorCount').textContent = vendors.length;
@@ -940,12 +860,12 @@
       sideBadge.textContent = `${queue.length} Due`;
 
       if (queue.length === 0) {
-        badge.className = "bg-white text-emerald-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold shadow-xs";
+        badge.className = "bg-white text-emerald-900 text-[10px] px-2 py-0.5 rounded-full font-extrabold shadow-2xs";
         badge.textContent = "All Done!";
         sideBadge.className = "text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30";
         sideBadge.textContent = "0";
       } else {
-        badge.className = "bg-white text-amber-900 text-[11px] px-2 py-0.5 rounded-full font-extrabold shadow-xs";
+        badge.className = "bg-white text-amber-900 text-[10px] px-2 py-0.5 rounded-full font-extrabold shadow-2xs";
         sideBadge.className = "text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30";
       }
     }
@@ -958,7 +878,6 @@
       const stageFilter = document.getElementById('stageFilterSelect').value;
       const visibleVendors = getVisibleVendors().map(v => v.id);
 
-      // Update Workspace Heading & Subtext dynamically
       const headingEl = document.getElementById('currentWorkspaceHeading');
       const subEl = document.getElementById('statWorkspaceSub');
       if (selectedVendorId === 'ALL') {
@@ -970,7 +889,6 @@
         subEl.textContent = currV ? `Dedicated to ${currV.name}` : 'Vendor specific';
       }
 
-      // Scoped leads based on active vendor workspace and allowed access
       let scopedContacts = contacts.filter(c => {
         if (!visibleVendors.includes(c.vendorId)) return false;
         if (selectedVendorId !== 'ALL' && c.vendorId !== selectedVendorId) return false;
@@ -985,7 +903,6 @@
         return true;
       });
 
-      // Front desk metrics
       document.getElementById('statTotalContacts').textContent = scopedContacts.length;
       const won = scopedContacts.filter(c => c.stage === 'Won');
       document.getElementById('statWonCount').textContent = won.length;
@@ -998,9 +915,6 @@
       document.getElementById('statWonSub').textContent = '₹' + totalVal.toLocaleString('en-IN') + ' closed volume';
       document.getElementById('statFollowUpsDue').textContent = followUps.length;
 
-      // ==========================================
-      // RENDER TABLE VIEW (WITH INLINE FOLLOW-UP DATE)
-      // ==========================================
       const tbody = document.getElementById('contactsTableBody');
       if (filtered.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No leads found in this view.</td></tr>`;
@@ -1050,9 +964,6 @@
         }).join('');
       }
 
-      // ==========================================
-      // RENDER KANBAN VIEW (WITH DRAG & DROP + INLINE DATE)
-      // ==========================================
       stagesList.forEach(stage => {
         const colEl = document.getElementById(`kCol-${stage}`);
         if (!colEl) return;
@@ -1061,7 +972,7 @@
         const cardsEl = colEl.querySelector('.k-cards');
         
         if (stageLeads.length === 0) {
-          cardsEl.innerHTML = `<div class="h-24 border border-dashed border-slate-200 rounded-lg flex items-center justify-center text-[10px] text-slate-400 pointer-events-none">Drop Leads Here</div>`;
+          cardsEl.innerHTML = `<div class="h-28 border border-dashed border-slate-200 rounded-lg flex items-center justify-center text-[10px] text-slate-400 pointer-events-none">Drop Leads Here</div>`;
         } else {
           cardsEl.innerHTML = stageLeads.map(c => {
             const badge = getFollowUpBadge(c.followUpDate);
@@ -1105,7 +1016,6 @@
       setupKanbanDragAndDrop();
     }
 
-    // Native HTML5 Drag & Drop
     let draggedLeadId = null;
 
     function setupKanbanDragAndDrop() {
@@ -1200,9 +1110,23 @@
       }
     };
 
-    // ==========================================
-    // SMART LOST DEAL CAPTURE (REASON + REMARKS)
-    // ==========================================
+    const addLeadModal = document.getElementById('addLeadModal');
+
+    function openAddLeadModal() {
+      addLeadModal.classList.remove('hidden');
+      document.getElementById('contactName').focus();
+    }
+
+    function closeAddLeadModal() {
+      addLeadModal.classList.add('hidden');
+      document.getElementById('contactForm').reset();
+    }
+
+    document.getElementById('headerAddLeadBtn')?.addEventListener('click', openAddLeadModal);
+    document.getElementById('toolbarAddLeadBtn')?.addEventListener('click', openAddLeadModal);
+    document.getElementById('closeAddLeadModalBtn')?.addEventListener('click', closeAddLeadModal);
+    document.getElementById('cancelAddLeadBtn')?.addEventListener('click', closeAddLeadModal);
+
     let pendingLostLeadId = null;
 
     window.markLost = function(id) {
@@ -1249,7 +1173,6 @@
       const clientBudget = reason === 'Budget' ? (parseFloat(document.getElementById('lostClientBudgetInput').value) || null) : null;
       const remarks = document.getElementById('lostRemarksInput').value.trim();
 
-      // Create rich archived lead
       const archivedLead = {
         ...c,
         lostReason: reason,
@@ -1282,10 +1205,7 @@
       }
     };
 
-    // ========================================================
-    // SECURE 2-STEP DOUBLE CONFIRMATION + PIN DELETION ENGINE
-    // ========================================================
-    let pendingDeletion = null; // { type: 'lead'|'vendor', id: ..., label: ... }
+    let pendingDeletion = null;
 
     window.requestSecureDelete = function(type, id, label) {
       if (currentRole !== 'admin') {
@@ -1293,11 +1213,9 @@
         return;
       }
       
-      // Step 1: First browser cross-check confirmation
       const firstCheck = confirm(`[1st Confirmation]: Are you sure you want to delete ${type.toUpperCase()} "${label}"?\n\nClick OK to proceed to Master PIN verification.`);
       if (!firstCheck) return;
 
-      // Step 2: Open PIN verification modal
       pendingDeletion = { type, id, label };
       document.getElementById('deleteModalTitle').textContent = `Authorize ${type === 'lead' ? 'Lead' : 'Vendor'} Deletion`;
       document.getElementById('deleteModalSubtitle').textContent = `Permanently removing "${label}". Enter Master PIN to confirm.`;
@@ -1320,7 +1238,6 @@
         return;
       }
 
-      // PIN is correct, execute actual permanent deletion
       if (pendingDeletion.type === 'lead') {
         contacts = contacts.filter(c => c.id !== pendingDeletion.id);
         alert(`✅ Lead "${pendingDeletion.label}" deleted.`);
@@ -1347,7 +1264,6 @@
       if (e.key === 'Enter') document.getElementById('confirmSecureDeleteBtn').click();
     });
 
-    // Vendor Management Modal
     const manageVendorsModal = document.getElementById('manageVendorsModal');
     
     function renderManageVendorsList() {
@@ -1375,7 +1291,6 @@
     };
     document.getElementById('closeManageVendorsBtn').onclick = () => manageVendorsModal.classList.add('hidden');
 
-    // Add Vendor Modal Events
     const addVendorModal = document.getElementById('addVendorModal');
     document.getElementById('headerAddVendorBtn').onclick = () => {
       if (currentRole !== 'admin') {
@@ -1405,7 +1320,6 @@
       renderPermissionsSettings();
     };
 
-    // Toggle Table vs Kanban
     document.getElementById('toggleTableBtn').onclick = () => {
       currentViewMode = 'table';
       document.getElementById('tableViewContainer').classList.remove('hidden');
@@ -1423,7 +1337,6 @@
       renderPipeline();
     };
 
-    // High-speed outreach sprint engine
     let currentSprintQueue = [];
     let sprintIndex = 0;
 
@@ -1553,7 +1466,6 @@
     document.getElementById('sideNavSprintBtn').onclick = launchSprint;
     document.getElementById('closeSprintModalBtn').onclick = () => document.getElementById('sprintModal').classList.add('hidden');
 
-    // Filter listeners
     document.getElementById('stageFilterSelect').onchange = renderPipeline;
     document.getElementById('searchInput').oninput = renderPipeline;
     document.getElementById('vendorWorkspaceSelect').onchange = (e) => {
@@ -1561,7 +1473,6 @@
       renderPipeline();
     };
 
-    // Contact Form Submit
     document.getElementById('contactForm').onsubmit = (e) => {
       e.preventDefault();
       const vId = document.getElementById('vendorSelect').value;
@@ -1583,11 +1494,11 @@
       };
       contacts.unshift(newDeal);
       saveData();
-      e.target.reset();
+      closeAddLeadModal();
       renderPipeline();
+      alert(`🎉 New lead "${newDeal.name}" added successfully!`);
     };
 
-    // Sidebar Navigation Page Switcher
     function switchPage(page) {
       currentPage = page;
       const pipelineSec = document.getElementById('pipelinePageSection');
@@ -1644,9 +1555,6 @@
       switchPage('permissions');
     };
 
-    // ==========================================
-    // PERMISSIONS & REPS LINK GENERATOR
-    // ==========================================
     function renderPermissionsSettings() {
       const container = document.getElementById('repVendorCheckboxes');
       container.innerHTML = vendors.map(v => `
@@ -1765,11 +1673,9 @@
         return true;
       });
 
-      // Compute statistics for Lost Leads
       const totalLostCount = scopedLost.length;
       const totalLostValue = scopedLost.reduce((sum, c) => sum + (Number(c.value) || 0), 0);
 
-      // Find top lost reason
       const reasonCounts = {};
       scopedLost.forEach(c => {
         const r = c.lostReason || 'Other';
@@ -1844,7 +1750,6 @@
       }).join('');
     }
 
-    // Fully Automated CSV Importer: Auto-registers new Vendors & maps leads!
     document.getElementById('headerImportCsvBtn').onclick = () => document.getElementById('csvFileInput').click();
     document.getElementById('csvFileInput').onchange = (e) => {
       const file = e.target.files[0];
@@ -1896,7 +1801,6 @@
       reader.readAsText(file);
     };
 
-    // CSV Export (Admin only)
     document.getElementById('sideExportCsvBtn').onclick = () => {
       if (currentRole !== 'admin') {
         alert('⛔ CSV export is restricted to Admin.');
@@ -1918,7 +1822,6 @@
       a.click();
     };
 
-    // Boot & Initialize
     applyRolePermissions();
     renderPipeline();
   </script>
