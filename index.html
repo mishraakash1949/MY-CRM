@@ -21,72 +21,125 @@
     .drag-over { background-color: #e2e8f0 !important; border: 2px dashed #3b82f6 !important; }
     .sidebar-link.active { background-color: #3b82f6; color: #ffffff; font-weight: 600; }
     .sidebar-link { transition: all 0.15s ease; }
+    .board-fullscreen {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 50 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100vw !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      background-color: #f8fafc !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+    }
+    .board-fullscreen #tableViewContainer {
+      flex: 1 1 0% !important;
+      overflow-y: auto !important;
+      max-height: calc(100vh - 72px) !important;
+    }
+    .board-fullscreen #kanbanViewContainer {
+      flex: 1 1 0% !important;
+      height: calc(100vh - 72px) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+    }
+    .board-fullscreen .kanban-col {
+      height: calc(100vh - 145px) !important;
+      min-height: 0 !important;
+    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex antialiased">
 
-  <!-- PIPEDRIVE-STYLE LEFT SIDEBAR NAVIGATION -->
+  <!-- ========================================== -->
+  <!-- PIPEDRIVE-STYLE LEFT SIDEBAR NAVIGATION    -->
+  <!-- ========================================== -->
   <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-slate-800 select-none">
+    
+    <!-- Workspace Brand Header -->
     <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shadow-sm tracking-wider">W</div>
+        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shadow-sm tracking-wider">
+          W
+        </div>
         <div>
           <h2 class="text-xs font-bold text-white tracking-wide uppercase leading-tight">Wedding CRM</h2>
           <span id="sidebarRoleTag" class="text-[10px] text-emerald-400 font-semibold">Admin Workspace</span>
         </div>
       </div>
-      <button id="quickLockToggleBtn" class="text-xs text-slate-400 hover:text-white transition p-1" title="Switch or Lock Role">🔒</button>
+      <button id="quickLockToggleBtn" class="text-xs text-slate-400 hover:text-white transition p-1" title="Switch or Lock Role">
+        🔒
+      </button>
     </div>
 
+    <!-- Navigation Menu Items -->
     <nav class="flex-1 px-3 py-4 space-y-1.5 text-xs font-medium overflow-y-auto">
+      
       <div class="px-2 pb-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider">Sales Operations</div>
 
+      <!-- Deals / Pipeline -->
       <button id="sideNavPipelineBtn" type="button" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
         <span class="flex-1 font-semibold">Deals Pipeline</span>
         <span id="sidePipelineCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-bold">0</span>
       </button>
 
+      <!-- Follow-Up Sprint -->
       <button id="sideNavSprintBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left text-amber-300">
         <svg class="w-4 h-4 shrink-0 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
         <span class="flex-1 font-semibold text-white">Daily Sprint</span>
         <span id="sideSprintDueCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">0 Due</span>
       </button>
 
+      <!-- Lost Repository -->
       <button id="sideNavLostBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
         <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
         <span class="flex-1">Lost Archive</span>
         <span id="sideLostCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
       </button>
 
+      <!-- ADMIN ONLY SECTION -->
       <div id="adminNavSection" class="pt-4 space-y-1.5">
         <div class="px-2 pb-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider flex items-center justify-between">
           <span>Admin Controls</span>
           <span class="text-[9px] px-1 rounded bg-slate-800 text-slate-400">Protected</span>
         </div>
 
+        <!-- Finances & Commission (Admin Only) -->
         <button id="sideNavFinanceBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <span class="flex-1 font-semibold">Finances & 10% Comm</span>
         </button>
 
+        <!-- Vendor Manager (Admin Only) -->
         <button id="sideNavVendorsBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
           <span class="flex-1">Manage Vendors (<span id="sideVendorCount">0</span>)</span>
         </button>
 
+        <!-- Access & Permissions Settings (Admin Only) -->
         <button id="sideNavPermissionsBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
           <span class="flex-1">Access & Team Settings</span>
         </button>
 
+        <!-- CSV Export & Backup (Admin Only) -->
         <button id="sideExportCsvBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
           <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
           <span class="flex-1">Export Database CSV</span>
         </button>
       </div>
+
     </nav>
 
+    <!-- Sidebar Bottom: Role State & Switcher -->
     <div class="p-3 border-t border-slate-800 bg-slate-950/50">
       <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
         <div class="flex items-center justify-between">
@@ -94,15 +147,24 @@
           <span id="rolePillStatus" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Admin</span>
         </div>
         <div class="grid grid-cols-2 gap-1.5 pt-1">
-          <button id="roleToSalesBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition">Sales Closer</button>
-          <button id="roleToAdminBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs">Admin</button>
+          <button id="roleToSalesBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+            Sales Closer
+          </button>
+          <button id="roleToAdminBtn" type="button" class="py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs">
+            Admin
+          </button>
         </div>
       </div>
     </div>
+
   </aside>
 
-  <!-- MAIN APPLICATION CONTENT AREA -->
+  <!-- ========================================== -->
+  <!-- MAIN APPLICATION CONTENT AREA              -->
+  <!-- ========================================== -->
   <main class="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
+    
+    <!-- Top Action Bar -->
     <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 shadow-2xs">
       <div class="flex items-center gap-3">
         <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Filter Workspace:</span>
@@ -112,6 +174,7 @@
       </div>
 
       <div class="flex items-center gap-2.5">
+        <!-- Prominent + New Lead Button in Top Bar -->
         <button id="headerAddLeadBtn" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs">
           + New Lead
         </button>
@@ -126,9 +189,13 @@
     </header>
 
     <div class="p-6 sm:p-8 space-y-5 flex-1">
-      <!-- VIEW 1: PIPELINE / DEALS (FULL WIDTH) -->
+      
+      <!-- ========================================== -->
+      <!-- VIEW 1: PIPELINE / DEALS (FULL WIDTH!)     -->
+      <!-- ========================================== -->
       <div id="pipelinePageSection" class="space-y-4">
-        <!-- Compact Daily Follow-Up Sprint Strip -->
+        
+        <!-- COMPACT Daily Follow-Up Sprint Strip (Item 3: Sleek & Small) -->
         <div id="sprintAlertBanner" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-xs flex items-center justify-between gap-3">
           <div class="flex items-center gap-2.5 min-w-0">
             <span class="w-6 h-6 rounded-lg bg-white/20 backdrop-blur-xs flex items-center justify-center text-xs font-bold shrink-0">⚡</span>
@@ -143,7 +210,7 @@
           </button>
         </div>
 
-        <!-- Compact Metric Cards -->
+        <!-- COMPACT Metric Cards (Reduces vertical space consumption) -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
             <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Workspace Leads</div>
@@ -167,9 +234,11 @@
           </div>
         </div>
 
-        <!-- EXPANSIVE FULL-WIDTH TABLE & KANBAN -->
+        <!-- EXPANSIVE FULL-WIDTH TABLE & KANBAN (WITH FULLSCREEN TOGGLE) -->
         <div class="w-full">
-          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div id="mainBoardCard" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-150">
+            
+            <!-- Toolbar with View Switcher & Action Buttons -->
             <div class="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div class="flex items-center gap-3">
                 <h2 id="currentWorkspaceHeading" class="text-base font-bold text-slate-900">All Vendor Inquiries</h2>
@@ -177,9 +246,15 @@
                   <button id="toggleTableBtn" type="button" class="px-2.5 py-1 rounded-md font-semibold bg-white text-slate-900 shadow-xs">Table</button>
                   <button id="toggleKanbanBtn" type="button" class="px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900">Kanban (Drag & Drop)</button>
                 </div>
+                <!-- Fullscreen Toggle Button -->
+                <button id="toggleFullscreenBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-2xs transition" title="Toggle Fullscreen (Press F or Esc)">
+                  <span id="fullscreenIcon" class="text-sm">⛶</span>
+                  <span id="fullscreenLabel">Fullscreen</span>
+                </button>
               </div>
               
               <div class="flex flex-wrap items-center gap-2">
+                <!-- Secondary + Add Lead button directly in toolbar -->
                 <button id="toolbarAddLeadBtn" type="button" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-2xs transition">
                   <span>+</span> New Lead
                 </button>
@@ -198,7 +273,7 @@
               </div>
             </div>
 
-            <!-- Table View -->
+            <!-- Table View (Expansive full width) -->
             <div id="tableViewContainer" class="overflow-x-auto">
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
@@ -219,7 +294,8 @@
             <div id="kanbanViewContainer" class="hidden p-4 bg-slate-50/60 overflow-x-auto">
               <div class="text-[11px] text-slate-400 mb-2.5 font-medium">Tip: Drag any lead card and drop it into another stage to instantly advance the pipeline.</div>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5 custom-scrollbar min-w-[1100px]">
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Lead In" id="kCol-Lead In">
+                
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[580px] h-[calc(100vh-320px)]" data-stage="Lead In" id="kCol-Lead In">
                   <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
                     <span>Lead In</span>
                     <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
@@ -227,7 +303,7 @@
                   <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
 
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Contact Made" id="kCol-Contact Made">
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[580px] h-[calc(100vh-320px)]" data-stage="Contact Made" id="kCol-Contact Made">
                   <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
                     <span>Contact Made</span>
                     <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
@@ -235,7 +311,7 @@
                   <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
 
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Follow Up" id="kCol-Follow Up">
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[580px] h-[calc(100vh-320px)]" data-stage="Follow Up" id="kCol-Follow Up">
                   <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
                     <span>Follow Up</span>
                     <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
@@ -243,7 +319,7 @@
                   <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
 
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Meeting Scheduled" id="kCol-Meeting Scheduled">
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[580px] h-[calc(100vh-320px)]" data-stage="Meeting Scheduled" id="kCol-Meeting Scheduled">
                   <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
                     <span>Meeting Set</span>
                     <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
@@ -251,7 +327,7 @@
                   <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
 
-                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[420px]" data-stage="Contract Shared" id="kCol-Contract Shared">
+                <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col min-h-[580px] h-[calc(100vh-320px)]" data-stage="Contract Shared" id="kCol-Contract Shared">
                   <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800">
                     <span>Contract Shared</span>
                     <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-bold">0</span>
@@ -259,21 +335,27 @@
                   <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
 
-                <div class="kanban-col bg-emerald-50/70 rounded-xl p-3 border border-emerald-200 flex flex-col min-h-[420px]" data-stage="Won" id="kCol-Won">
+                <div class="kanban-col bg-emerald-50/70 rounded-xl p-3 border border-emerald-200 flex flex-col min-h-[580px] h-[calc(100vh-320px)]" data-stage="Won" id="kCol-Won">
                   <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-200 text-xs font-bold text-emerald-900">
                     <span>Won Deals</span>
                     <span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px] text-emerald-800 font-bold">0</span>
                   </div>
                   <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
                 </div>
+
               </div>
             </div>
+
           </div>
         </div>
       </div>
 
+      <!-- ========================================== -->
       <!-- VIEW 2: FINANCES & COMMISSION (ADMIN ONLY) -->
+      <!-- ========================================== -->
       <div id="financePageSection" class="hidden space-y-6">
+        
+        <!-- Top Financial Overview -->
         <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-2xl p-6 text-white shadow-md">
           <h2 class="text-xl font-bold tracking-tight">Financial Accounts & Commission Hub</h2>
           <p class="text-xs text-slate-300 mt-1">Exclusive financial management, 10% agency commission, advance receipts, and vendor payouts.</p>
@@ -302,6 +384,7 @@
           </div>
         </div>
 
+        <!-- Vendor Commission Breakdown Table -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="p-5 border-b border-slate-200">
             <h3 class="text-base font-bold text-slate-900">Vendor Accounts & 10% Commission Split</h3>
@@ -325,6 +408,7 @@
           </div>
         </div>
 
+        <!-- Detailed Payment Ledger -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="p-5 border-b border-slate-200">
             <h3 class="text-base font-bold text-slate-900">Confirmed Bookings Payment Ledger</h3>
@@ -349,8 +433,12 @@
         </div>
       </div>
 
-      <!-- VIEW 3: LOST ARCHIVE -->
+      <!-- ========================================== -->
+      <!-- VIEW 3: LOST ARCHIVE (WITH REASON & NOTES) -->
+      <!-- ========================================== -->
       <div id="lostPageSection" class="hidden space-y-6">
+        
+        <!-- Summary Cards for Lost Leads -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div class="text-xs font-semibold uppercase tracking-wider text-slate-500">Archived Lost Deals</div>
@@ -407,7 +495,9 @@
         </div>
       </div>
 
-      <!-- VIEW 4: ACCESS & TEAM SETTINGS -->
+      <!-- ========================================== -->
+      <!-- VIEW 4: ACCESS & TEAM SETTINGS             -->
+      <!-- ========================================== -->
       <div id="permissionsPageSection" class="hidden space-y-6">
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
           <div class="border-b border-slate-100 pb-4">
@@ -415,6 +505,7 @@
             <p class="text-xs text-slate-500 mt-1">Configure which sales reps can see which photographers or makeup artists, and generate restricted links.</p>
           </div>
 
+          <!-- Section 1: Sales Rep Generator -->
           <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
             <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
               <span>🔗</span> Generate Dedicated Sales Rep Link (Restricted to Specific Vendors)
@@ -434,6 +525,7 @@
             </div>
           </div>
 
+          <!-- Section 2: Master Security PIN Settings -->
           <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
             <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
               <span>🔐</span> Master Security PIN Settings
@@ -449,10 +541,14 @@
           </div>
         </div>
       </div>
+
     </div>
+
   </main>
 
-  <!-- MODAL 0: NEW WEDDING LEAD POPUP (Compact Modal) -->
+  <!-- =================================================== -->
+  <!-- MODAL 0: NEW WEDDING LEAD POPUP (Item 2: Toggleable) -->
+  <!-- =================================================== -->
   <div id="addLeadModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -539,7 +635,9 @@
     </div>
   </div>
 
-  <!-- MODAL 1: SPRINT POPUP -->
+  <!-- ========================================== -->
+  <!-- MODAL 1: DAILY OUTREACH SPRINT POPUP       -->
+  <!-- ========================================== -->
   <div id="sprintModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-xl w-full p-6 animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -553,7 +651,9 @@
     </div>
   </div>
 
-  <!-- MODAL 2: ADD VENDOR MODAL -->
+  <!-- ========================================== -->
+  <!-- MODAL 2: ADD VENDOR MODAL                  -->
+  <!-- ========================================== -->
   <div id="addVendorModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-sm w-full p-6 animate-pop">
       <h3 class="font-bold text-slate-900 text-base mb-4">Add New Vendor Space</h3>
@@ -580,7 +680,9 @@
     </div>
   </div>
 
-  <!-- MODAL 3: MANAGE VENDORS -->
+  <!-- ========================================== -->
+  <!-- MODAL 3: MANAGE VENDORS                    -->
+  <!-- ========================================== -->
   <div id="manageVendorsModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-md w-full p-6 animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -594,39 +696,61 @@
     </div>
   </div>
 
-  <!-- MODAL 4: ADMIN PIN UNLOCK -->
+  <!-- ========================================== -->
+  <!-- MODAL 4: ADMIN PIN UNLOCK (SECURE: 7818)   -->
+  <!-- ========================================== -->
   <div id="adminPinModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-xs w-full p-6 shadow-2xl border border-slate-200 animate-pop text-center">
-      <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-900 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">🔒</div>
+      <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-900 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">
+        🔒
+      </div>
       <h3 class="text-base font-bold text-slate-900">Admin Authentication</h3>
       <p class="text-xs text-slate-500 mt-1 mb-4">Enter Master Admin PIN to unlock full financial access and delete permissions.</p>
+      
       <div class="mb-4">
         <input type="password" id="adminPinInput" maxlength="6" placeholder="••••" class="w-32 mx-auto text-center px-3 py-2 text-lg font-mono tracking-widest font-bold border-2 border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900 bg-slate-50 text-slate-900">
       </div>
+
       <div class="grid grid-cols-2 gap-2">
-        <button id="cancelAdminPinBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Cancel</button>
-        <button id="confirmAdminPinBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-xs transition">Unlock</button>
+        <button id="cancelAdminPinBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Cancel
+        </button>
+        <button id="confirmAdminPinBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-xs transition">
+          Unlock
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL 5: DOUBLE-CONFIRMATION + PIN DELETION MODAL -->
+  <!-- =================================================== -->
+  <!-- MODAL 5: DOUBLE-CONFIRMATION + PIN DELETION MODAL   -->
+  <!-- =================================================== -->
   <div id="secureDeleteModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-red-200 animate-pop text-center">
-      <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">⚠️</div>
+      <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 font-bold flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">
+        ⚠️
+      </div>
       <h3 class="text-base font-bold text-slate-900" id="deleteModalTitle">Confirm Deletion</h3>
       <p class="text-xs text-slate-500 mt-1 mb-4" id="deleteModalSubtitle">This action is permanent. Enter Master PIN to authorize.</p>
+      
       <div class="mb-4">
         <input type="password" id="deletePinInput" maxlength="6" placeholder="Enter PIN (7818)" class="w-36 mx-auto text-center px-3 py-2 text-lg font-mono tracking-widest font-bold border-2 border-red-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 bg-red-50/50 text-slate-900">
       </div>
+
       <div class="grid grid-cols-2 gap-2">
-        <button id="cancelSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Cancel</button>
-        <button id="confirmSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-xs transition">Confirm & Delete</button>
+        <button id="cancelSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Cancel
+        </button>
+        <button id="confirmSecureDeleteBtn" type="button" class="py-2 px-3 text-xs font-bold rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-xs transition">
+          Confirm & Delete
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL 6: MARK LOST REASON & REMARKS MODAL -->
+  <!-- =================================================== -->
+  <!-- MODAL 6: MARK LOST REASON & REMARKS MODAL           -->
+  <!-- =================================================== -->
   <div id="markLostModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -650,6 +774,7 @@
           </select>
         </div>
 
+        <!-- Conditional Client Target Budget Input -->
         <div id="lostBudgetBox" class="p-3 bg-amber-50/70 border border-amber-200 rounded-xl space-y-1">
           <label class="block font-bold text-amber-900 uppercase tracking-wider text-[11px]">What was the client's actual budget? (₹)</label>
           <input type="number" id="lostClientBudgetInput" placeholder="e.g. 100000" class="w-full px-3 py-1.5 text-xs border border-amber-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-amber-500">
@@ -681,16 +806,22 @@
     let lostContacts = JSON.parse(localStorage.getItem('crm_lost') || '[]');
     let selectedVendorId = 'ALL';
     let currentPage = 'pipeline';
-    let currentViewMode = 'table';
+    let currentViewMode = 'table'; // 'table' or 'kanban'
 
+    // Secure Master PIN explicitly set to 7818
     let masterAdminPin = localStorage.getItem('crm_admin_pin') || "7818";
     let currentRole = localStorage.getItem('crm_user_role') || 'admin';
 
+    // Support ?role=sales and ?vendors=v1,v2 in URL for exclusive one-click bookmark for sales reps!
     const urlParams = new URLSearchParams(window.location.search);
-    let allowedVendorIds = null;
+    let allowedVendorIds = null; // null means all vendors
 
-    if (urlParams.get('role') === 'sales') currentRole = 'sales';
-    if (urlParams.get('vendors')) allowedVendorIds = urlParams.get('vendors').split(',').filter(Boolean);
+    if (urlParams.get('role') === 'sales') {
+      currentRole = 'sales';
+    }
+    if (urlParams.get('vendors')) {
+      allowedVendorIds = urlParams.get('vendors').split(',').filter(Boolean);
+    }
 
     const todayStr = new Date().toISOString().split('T')[0];
 
@@ -719,10 +850,13 @@
         roleToSalesBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 text-white shadow-xs';
         roleToAdminBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
 
+        // Completely hide Admin-only Sidebar controls from Sales Closer
         adminNavSection.classList.add('hidden');
         headerAddVendorBtn.classList.add('hidden');
 
-        if (currentPage === 'finances' || currentPage === 'permissions') switchPage('pipeline');
+        if (currentPage === 'finances' || currentPage === 'permissions') {
+          switchPage('pipeline');
+        }
       } else {
         sidebarTag.textContent = 'Admin Workspace';
         sidebarTag.className = 'text-[10px] text-emerald-400 font-semibold';
@@ -732,12 +866,14 @@
         roleToAdminBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-bold bg-blue-600 text-white shadow-xs';
         roleToSalesBtn.className = 'py-1.5 px-2 rounded-lg text-center text-[11px] font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition';
 
+        // Show Admin controls
         adminNavSection.classList.remove('hidden');
         headerAddVendorBtn.classList.remove('hidden');
       }
       saveData();
     }
 
+    // Role Switching with 7818 PIN
     document.getElementById('roleToSalesBtn').onclick = () => {
       currentRole = 'sales';
       applyRolePermissions();
@@ -809,11 +945,12 @@
     }
 
     function getWhatsAppUrl(phone, text) {
-      const clean = (phone || '').replace(/\\D/g, '');
+      const clean = (phone || '').replace(/\D/g, '');
       const valid = clean.length === 10 ? '91' + clean : clean;
       return `https://wa.me/${valid}?text=${encodeURIComponent(text)}`;
     }
 
+    // Filter Vendors based on allowed permissions (for Sales Reps)
     function getVisibleVendors() {
       if (allowedVendorIds && allowedVendorIds.length > 0) {
         return vendors.filter(v => allowedVendorIds.includes(v.id));
@@ -821,15 +958,18 @@
       return vendors;
     }
 
+    // Fully Automated & Accurate Nav Renderer
     function renderNav() {
       const wsSelect = document.getElementById('vendorWorkspaceSelect');
       const vSelect = document.getElementById('vendorSelect');
       const visibleVendors = getVisibleVendors();
       
+      // Update Lead Form's vendor dropdown
       if (vSelect) {
         vSelect.innerHTML = visibleVendors.map(v => `<option value="${v.id}" ${selectedVendorId === v.id ? 'selected' : ''}>${v.name} (${v.category})</option>`).join('');
       }
       
+      // Workspace filter
       let optionsHtml = `<option value="ALL" ${selectedVendorId === 'ALL' ? 'selected' : ''}>All Vendors (${visibleVendors.length} Vendors • ${contacts.length} Leads)</option>`;
       visibleVendors.forEach(v => {
         const count = contacts.filter(c => c.vendorId === v.id).length;
@@ -837,6 +977,7 @@
       });
       wsSelect.innerHTML = optionsHtml;
       
+      // Sidebar counters
       document.getElementById('sidePipelineCount').textContent = contacts.length;
       document.getElementById('sideLostCount').textContent = lostContacts.length;
       document.getElementById('sideVendorCount').textContent = vendors.length;
@@ -878,6 +1019,7 @@
       const stageFilter = document.getElementById('stageFilterSelect').value;
       const visibleVendors = getVisibleVendors().map(v => v.id);
 
+      // Update Workspace Heading & Subtext dynamically
       const headingEl = document.getElementById('currentWorkspaceHeading');
       const subEl = document.getElementById('statWorkspaceSub');
       if (selectedVendorId === 'ALL') {
@@ -889,6 +1031,7 @@
         subEl.textContent = currV ? `Dedicated to ${currV.name}` : 'Vendor specific';
       }
 
+      // Scoped leads based on active vendor workspace and allowed access
       let scopedContacts = contacts.filter(c => {
         if (!visibleVendors.includes(c.vendorId)) return false;
         if (selectedVendorId !== 'ALL' && c.vendorId !== selectedVendorId) return false;
@@ -903,6 +1046,7 @@
         return true;
       });
 
+      // Front desk metrics
       document.getElementById('statTotalContacts').textContent = scopedContacts.length;
       const won = scopedContacts.filter(c => c.stage === 'Won');
       document.getElementById('statWonCount').textContent = won.length;
@@ -915,6 +1059,9 @@
       document.getElementById('statWonSub').textContent = '₹' + totalVal.toLocaleString('en-IN') + ' closed volume';
       document.getElementById('statFollowUpsDue').textContent = followUps.length;
 
+      // ==========================================
+      // RENDER TABLE VIEW (WITH INLINE FOLLOW-UP DATE)
+      // ==========================================
       const tbody = document.getElementById('contactsTableBody');
       if (filtered.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No leads found in this view.</td></tr>`;
@@ -955,7 +1102,7 @@
                   </a>` : ''}
                 <button onclick="markLost(${c.id})" class="text-slate-400 hover:text-slate-700">Lost</button>
                 ${currentRole === 'admin' ? 
-                  `<button onclick="requestSecureDelete('lead', ${c.id}, '${c.name.replace(/'/g, "\\'")}')" class="text-red-500 hover:underline">Delete</button>` : 
+                  `<button onclick="requestSecureDelete('lead', ${c.id}, '${c.name.replace(/'/g, "\'")}')" class="text-red-500 hover:underline">Delete</button>` : 
                   `<span class="text-slate-300" title="Delete restricted to Admin">Locked</span>`
                 }
               </td>
@@ -964,6 +1111,9 @@
         }).join('');
       }
 
+      // ==========================================
+      // RENDER KANBAN VIEW (WITH DRAG & DROP + INLINE DATE)
+      // ==========================================
       stagesList.forEach(stage => {
         const colEl = document.getElementById(`kCol-${stage}`);
         if (!colEl) return;
@@ -1016,6 +1166,7 @@
       setupKanbanDragAndDrop();
     }
 
+    // Native HTML5 Drag & Drop
     let draggedLeadId = null;
 
     function setupKanbanDragAndDrop() {
@@ -1110,6 +1261,9 @@
       }
     };
 
+    // ==========================================
+    // ADD LEAD MODAL CONTROLS (Item 2: Toggleable)
+    // ==========================================
     const addLeadModal = document.getElementById('addLeadModal');
 
     function openAddLeadModal() {
@@ -1127,6 +1281,9 @@
     document.getElementById('closeAddLeadModalBtn')?.addEventListener('click', closeAddLeadModal);
     document.getElementById('cancelAddLeadBtn')?.addEventListener('click', closeAddLeadModal);
 
+    // ==========================================
+    // SMART LOST DEAL CAPTURE (REASON + REMARKS)
+    // ==========================================
     let pendingLostLeadId = null;
 
     window.markLost = function(id) {
@@ -1173,6 +1330,7 @@
       const clientBudget = reason === 'Budget' ? (parseFloat(document.getElementById('lostClientBudgetInput').value) || null) : null;
       const remarks = document.getElementById('lostRemarksInput').value.trim();
 
+      // Create rich archived lead
       const archivedLead = {
         ...c,
         lostReason: reason,
@@ -1205,7 +1363,10 @@
       }
     };
 
-    let pendingDeletion = null;
+    // ========================================================
+    // SECURE 2-STEP DOUBLE CONFIRMATION + PIN DELETION ENGINE
+    // ========================================================
+    let pendingDeletion = null; // { type: 'lead'|'vendor', id: ..., label: ... }
 
     window.requestSecureDelete = function(type, id, label) {
       if (currentRole !== 'admin') {
@@ -1264,6 +1425,7 @@
       if (e.key === 'Enter') document.getElementById('confirmSecureDeleteBtn').click();
     });
 
+    // Vendor Management Modal
     const manageVendorsModal = document.getElementById('manageVendorsModal');
     
     function renderManageVendorsList() {
@@ -1291,6 +1453,7 @@
     };
     document.getElementById('closeManageVendorsBtn').onclick = () => manageVendorsModal.classList.add('hidden');
 
+    // Add Vendor Modal Events
     const addVendorModal = document.getElementById('addVendorModal');
     document.getElementById('headerAddVendorBtn').onclick = () => {
       if (currentRole !== 'admin') {
@@ -1320,6 +1483,7 @@
       renderPermissionsSettings();
     };
 
+    // Toggle Table vs Kanban
     document.getElementById('toggleTableBtn').onclick = () => {
       currentViewMode = 'table';
       document.getElementById('tableViewContainer').classList.remove('hidden');
@@ -1337,6 +1501,7 @@
       renderPipeline();
     };
 
+    // High-speed outreach sprint engine
     let currentSprintQueue = [];
     let sprintIndex = 0;
 
@@ -1466,6 +1631,7 @@
     document.getElementById('sideNavSprintBtn').onclick = launchSprint;
     document.getElementById('closeSprintModalBtn').onclick = () => document.getElementById('sprintModal').classList.add('hidden');
 
+    // Filter listeners
     document.getElementById('stageFilterSelect').onchange = renderPipeline;
     document.getElementById('searchInput').oninput = renderPipeline;
     document.getElementById('vendorWorkspaceSelect').onchange = (e) => {
@@ -1473,6 +1639,7 @@
       renderPipeline();
     };
 
+    // Contact Form Submit (Inside New Lead Modal)
     document.getElementById('contactForm').onsubmit = (e) => {
       e.preventDefault();
       const vId = document.getElementById('vendorSelect').value;
@@ -1499,6 +1666,7 @@
       alert(`🎉 New lead "${newDeal.name}" added successfully!`);
     };
 
+    // Sidebar Navigation Page Switcher
     function switchPage(page) {
       currentPage = page;
       const pipelineSec = document.getElementById('pipelinePageSection');
@@ -1555,6 +1723,9 @@
       switchPage('permissions');
     };
 
+    // ==========================================
+    // PERMISSIONS & REPS LINK GENERATOR
+    // ==========================================
     function renderPermissionsSettings() {
       const container = document.getElementById('repVendorCheckboxes');
       container.innerHTML = vendors.map(v => `
@@ -1673,9 +1844,11 @@
         return true;
       });
 
+      // Compute statistics for Lost Leads
       const totalLostCount = scopedLost.length;
       const totalLostValue = scopedLost.reduce((sum, c) => sum + (Number(c.value) || 0), 0);
 
+      // Find top lost reason
       const reasonCounts = {};
       scopedLost.forEach(c => {
         const r = c.lostReason || 'Other';
@@ -1750,6 +1923,7 @@
       }).join('');
     }
 
+    // Fully Automated CSV Importer: Auto-registers new Vendors & maps leads!
     document.getElementById('headerImportCsvBtn').onclick = () => document.getElementById('csvFileInput').click();
     document.getElementById('csvFileInput').onchange = (e) => {
       const file = e.target.files[0];
@@ -1801,6 +1975,7 @@
       reader.readAsText(file);
     };
 
+    // CSV Export (Admin only)
     document.getElementById('sideExportCsvBtn').onclick = () => {
       if (currentRole !== 'admin') {
         alert('⛔ CSV export is restricted to Admin.');
@@ -1821,6 +1996,58 @@
       a.download = `leads_backup_${todayStr}.csv`;
       a.click();
     };
+
+    // Boot & Initialize
+    
+    // ==========================================
+    // FULLSCREEN TOGGLE ENGINE (Table & Kanban)
+    // ==========================================
+    let isBoardFullscreen = false;
+
+    function toggleBoardFullscreen() {
+      const card = document.getElementById('mainBoardCard');
+      const icon = document.getElementById('fullscreenIcon');
+      const label = document.getElementById('fullscreenLabel');
+      isBoardFullscreen = !isBoardFullscreen;
+
+      if (isBoardFullscreen) {
+        card.classList.add('board-fullscreen');
+        document.body.style.overflow = 'hidden';
+        icon.textContent = '🗗';
+        label.textContent = 'Exit Fullscreen';
+        // Try native fullscreen if available
+        if (!document.fullscreenElement && card.requestFullscreen) {
+          card.requestFullscreen().catch(() => {});
+        }
+      } else {
+        card.classList.remove('board-fullscreen');
+        document.body.style.overflow = '';
+        icon.textContent = '⛶';
+        label.textContent = 'Fullscreen';
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    }
+
+    document.getElementById('toggleFullscreenBtn')?.addEventListener('click', toggleBoardFullscreen);
+
+    // Keyboard Shortcuts: ESC or F
+    document.addEventListener('keydown', (e) => {
+      if ((e.key === 'f' || e.key === 'F') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+        e.preventDefault();
+        toggleBoardFullscreen();
+      }
+      if (e.key === 'Escape' && isBoardFullscreen) {
+        toggleBoardFullscreen();
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && isBoardFullscreen) {
+        toggleBoardFullscreen();
+      }
+    });
 
     applyRolePermissions();
     renderPipeline();
