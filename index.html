@@ -179,6 +179,13 @@
           + Add Vendor
         </button>
         <input type="file" id="csvFileInput" accept=".csv" class="hidden">
+                <!-- Cloud Sync Buttons -->
+        <button id="pushCloudBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition shadow-xs" title="Upload all leads & vendors to Cloud">
+          ☁️ Push Cloud
+        </button>
+        <button id="pullCloudBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-xs" title="Download latest leads & vendors from Cloud">
+          📥 Pull Cloud
+        </button>
         <button id="headerImportCsvBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition shadow-xs">
           Import CSV
         </button>
@@ -2038,6 +2045,71 @@
         toggleBoardFullscreen();
       }
     });
+
+    
+    // ==========================================
+    // JSONBIN CLOUD AUTO-SYNC ENGINE
+    // ==========================================
+    const JSONBIN_ID = "6ae99cb9ac6210605a6811be";
+    const JSONBIN_KEY = "$2a$10$2U8QhmId7vvYWV4Q5CZcGOD1nr4dMdbgK7P0AIVeqYwzZYgoOLOUC";
+
+    async function pushDataToCloud() {
+      const btn = document.getElementById('pushCloudBtn');
+      if (btn) btn.textContent = '⏳ Syncing...';
+      try {
+        const payload = {
+          vendors: vendors,
+          contacts: contacts,
+          lost: lostContacts
+        };
+        const res = await fetch('https://api.jsonbin.io/v3/b/' + JSONBIN_ID, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': JSONBIN_KEY
+          },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Cloud push failed');
+        alert('✅ Successfully pushed all data to Cloud! You can now pull this data on Windows.');
+      } catch (err) {
+        console.error(err);
+        alert('❌ Cloud push error. Check internet connection.');
+      } finally {
+        if (btn) btn.textContent = '☁️ Push Cloud';
+      }
+    }
+
+    async function pullDataFromCloud() {
+      const btn = document.getElementById('pullCloudBtn');
+      if (btn) btn.textContent = '⏳ Fetching...';
+      try {
+        const res = await fetch('https://api.jsonbin.io/v3/b/' + JSONBIN_ID + '/latest', {
+          headers: {
+            'X-Master-Key': JSONBIN_KEY
+          }
+        });
+        if (!res.ok) throw new Error('Cloud pull failed');
+        const data = await res.json();
+        const record = data.record;
+        if (record) {
+          if (record.vendors) vendors = record.vendors;
+          if (record.contacts) contacts = record.contacts;
+          if (record.lost) lostContacts = record.lost;
+          saveData();
+          renderPipeline();
+          alert('✅ Successfully pulled latest data from Cloud!');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('❌ Cloud pull error. Check internet connection.');
+      } finally {
+        if (btn) btn.textContent = '📥 Pull Cloud';
+      }
+    }
+
+    document.getElementById('pushCloudBtn')?.addEventListener('click', pushDataToCloud);
+    document.getElementById('pullCloudBtn')?.addEventListener('click', pullDataFromCloud);
 
     applyRolePermissions();
     renderPipeline();
