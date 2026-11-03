@@ -32,33 +32,40 @@
         <div class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shadow-sm">W</div>
         <div>
           <h2 class="text-xs font-bold text-white uppercase leading-tight">Wedding CRM</h2>
-          <span class="text-[10px] text-emerald-400 font-semibold">⚡ Auto-Sync Active</span>
+          <span id="sidebarRoleTag" class="text-[10px] text-emerald-400 font-semibold">Admin (Auto-Sync)</span>
         </div>
       </div>
+      <button id="quickLockToggleBtn" class="text-xs text-slate-400 hover:text-white transition p-1" title="Toggle Mode">🔒</button>
     </div>
-    <nav class="flex-1 px-3 py-4 space-y-1.5 text-xs font-medium">
-      <button id="sideNavPipelineBtn" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left font-semibold">
-        <span>Deals Pipeline</span>
-        <span id="sidePipelineCount" class="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300">0</span>
+
+    <nav class="flex-1 px-3 py-4 space-y-1.5 text-xs font-medium overflow-y-auto">
+      <div class="px-2 pb-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider">Operations</div>
+      <button id="sideNavPipelineBtn" type="button" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+        <span class="flex-1 font-semibold">Deals Pipeline</span>
+        <span id="sidePipelineCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-bold">0</span>
       </button>
-      <button id="sideNavFinanceBtn" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left">
-        <span>Finances & 10% Comm</span>
+      <button id="sideNavFinanceBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+        <span class="flex-1 font-semibold">Finances & 10% Comm</span>
       </button>
-      <button id="sideNavLostBtn" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 text-left">
-        <span>Lost Archive</span>
+      <button id="sideNavLostBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+        <span class="flex-1">Lost Archive</span>
+        <span id="sideLostCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
       </button>
     </nav>
   </aside>
 
   <!-- MAIN CONTENT -->
   <main class="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
-    <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0">
+    <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 shadow-2xs">
       <div class="flex items-center gap-3">
-        <span class="text-xs font-semibold uppercase text-slate-500">Cloud Status:</span>
-        <span id="syncStatusBadge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">🟢 Auto-Syncing Live</span>
+        <span class="text-xs font-semibold uppercase text-slate-500">Workspace:</span>
+        <select id="vendorWorkspaceSelect" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-900 focus:outline-none cursor-pointer"></select>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="toolbarAddLeadBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition">+ New Lead</button>
+
+      <div class="flex items-center gap-3">
+        <span id="syncStatusIndicator" class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 animate-pulse">🟢 Auto-Sync Active</span>
+        <button id="headerAddVendorBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-dashed border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition">+ Add Vendor</button>
+        <button id="toolbarAddLeadBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition shadow-xs">+ New Lead</button>
       </div>
     </header>
 
@@ -66,30 +73,38 @@
       
       <!-- PIPELINE SECTION -->
       <div id="pipelinePageSection" class="space-y-4">
+        <!-- METRICS -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          <div class="bg-white px-3 py-2 rounded-lg border border-slate-200 flex items-center justify-between">
+          <div class="bg-white px-3 py-2 rounded-lg border border-slate-200 flex items-center justify-between shadow-2xs">
             <span class="text-[11px] font-semibold text-slate-500 uppercase">Leads</span>
-            <span id="statTotalContacts" class="text-sm font-bold text-slate-900">0</span>
+            <span id="statTotalContacts" class="text-sm font-bold text-slate-900 font-mono">0</span>
           </div>
-          <div class="bg-white px-3 py-2 rounded-lg border border-slate-200 flex items-center justify-between">
+          <div class="bg-white px-3 py-2 rounded-lg border border-slate-200 flex items-center justify-between shadow-2xs">
             <span class="text-[11px] font-semibold text-slate-500 uppercase">Pipeline</span>
-            <span id="statPipelineValue" class="text-sm font-bold text-indigo-600">₹0</span>
+            <span id="statPipelineValue" class="text-sm font-bold text-indigo-600 font-mono">₹0</span>
           </div>
-          <div class="bg-white px-3 py-2 rounded-lg border border-slate-200 flex items-center justify-between">
+          <div class="bg-white px-3 py-2 rounded-lg border border-slate-200 flex items-center justify-between shadow-2xs">
             <span class="text-[11px] font-semibold text-slate-500 uppercase">Won</span>
-            <span id="statWonCount" class="text-sm font-bold text-emerald-600">0</span>
+            <span id="statWonCount" class="text-sm font-bold text-emerald-600 font-mono">0</span>
           </div>
-          <div class="bg-white px-3 py-2 rounded-lg border border-slate-200 flex items-center justify-between">
+          <div class="bg-white px-3 py-2 rounded-lg border border-slate-200 flex items-center justify-between shadow-2xs">
             <span class="text-[11px] font-semibold text-slate-500 uppercase">Due Today</span>
-            <span id="statFollowUpsDue" class="text-sm font-bold text-amber-600">0</span>
+            <span id="statFollowUpsDue" class="text-sm font-bold text-amber-600 font-mono">0</span>
           </div>
         </div>
 
+        <!-- TABLE / KANBAN CONTAINER -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div class="p-4 border-b border-slate-200 flex items-center justify-between">
-            <h2 class="text-base font-bold text-slate-900">All Vendor Inquiries</h2>
+          <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <h2 id="currentWorkspaceHeading" class="text-base font-bold text-slate-900">All Vendor Inquiries</h2>
+              <div class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs">
+                <button id="toggleTableBtn" type="button" class="px-2.5 py-1 rounded-md font-semibold bg-white text-slate-900 shadow-xs">Table</button>
+                <button id="toggleKanbanBtn" type="button" class="px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900">Kanban</button>
+              </div>
+            </div>
             <div class="flex items-center gap-2">
-              <select id="stageFilterSelect" class="px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white">
+              <select id="stageFilterSelect" class="px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white font-medium">
                 <option value="ALL">All Stages</option>
                 <option value="Lead In">Lead In</option>
                 <option value="Contact Made">Contact Made</option>
@@ -98,21 +113,55 @@
                 <option value="Contract Shared">Contract Shared</option>
                 <option value="Won">Won</option>
               </select>
+              <input type="text" id="searchInput" placeholder="Search client, phone..." class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg w-44 sm:w-56">
             </div>
           </div>
-          <div class="overflow-x-auto">
+
+          <!-- TABLE VIEW -->
+          <div id="tableViewContainer" class="overflow-x-auto">
             <table class="w-full text-left border-collapse text-xs">
               <thead>
-                <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200">
+                <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-semibold">
                   <th class="py-3 px-4">Client & Vendor</th>
-                  <th class="py-3 px-4">Event Date & Venue</th>
+                  <th class="py-3 px-4">Wedding Date & Venue</th>
+                  <th class="py-3 px-4">Follow-Up</th>
                   <th class="py-3 px-4">Stage</th>
-                  <th class="py-3 px-4 text-right">Deal Value</th>
+                  <th class="py-3 px-4 text-right">Value</th>
                   <th class="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody id="contactsTableBody" class="divide-y divide-slate-100"></tbody>
             </table>
+          </div>
+
+          <!-- KANBAN VIEW -->
+          <div id="kanbanViewContainer" class="hidden p-4 bg-slate-50/60 overflow-x-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5 custom-scrollbar min-w-[1100px]">
+              <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col h-[600px]" data-stage="Lead In" id="kCol-Lead In">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800"><span>Lead In</span><span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px]">0</span></div>
+                <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+              </div>
+              <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col h-[600px]" data-stage="Contact Made" id="kCol-Contact Made">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800"><span>Contact Made</span><span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px]">0</span></div>
+                <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+              </div>
+              <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col h-[600px]" data-stage="Follow Up" id="kCol-Follow Up">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800"><span>Follow Up</span><span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px]">0</span></div>
+                <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+              </div>
+              <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col h-[600px]" data-stage="Meeting Scheduled" id="kCol-Meeting Scheduled">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800"><span>Meeting Set</span><span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px]">0</span></div>
+                <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+              </div>
+              <div class="kanban-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 flex flex-col h-[600px]" data-stage="Contract Shared" id="kCol-Contract Shared">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 text-xs font-bold text-slate-800"><span>Contract Shared</span><span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px]">0</span></div>
+                <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+              </div>
+              <div class="kanban-col bg-emerald-50/70 rounded-xl p-3 border border-emerald-200 flex flex-col h-[600px]" data-stage="Won" id="kCol-Won">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-200 text-xs font-bold text-emerald-900"><span>Won Deals</span><span class="k-count bg-white px-1.5 py-0.5 rounded text-[10px]">0</span></div>
+                <div class="k-cards space-y-2.5 flex-1 overflow-y-auto"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -120,38 +169,27 @@
       <!-- FINANCES SECTION -->
       <div id="financePageSection" class="hidden space-y-6">
         <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-2xl p-6 text-white shadow-md">
-          <h2 class="text-xl font-bold">Financial Accounts & Commission Hub (10%)</h2>
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-800">
-            <div>
-              <div class="text-[11px] text-slate-400 uppercase">Gross Volume</div>
-              <div id="finGrossVolume" class="text-2xl font-bold mt-1">₹0</div>
-            </div>
-            <div>
-              <div class="text-[11px] text-indigo-300 uppercase">Agency Commission (10%)</div>
-              <div id="finAgencyComm" class="text-2xl font-bold text-indigo-400 mt-1">₹0</div>
-            </div>
-            <div>
-              <div class="text-[11px] text-emerald-400 uppercase">Advance Collected</div>
-              <div id="finAdvanceCollected" class="text-2xl font-bold text-emerald-400 mt-1">₹0</div>
-            </div>
-            <div>
-              <div class="text-[11px] text-amber-400 uppercase">Pending Due</div>
-              <div id="finPendingDue" class="text-2xl font-bold text-amber-400 mt-1">₹0</div>
-            </div>
+          <h2 class="text-xl font-bold">Financial Accounts & 10% Commission Hub</h2>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-800 text-xs">
+            <div><span class="text-slate-400 uppercase">Total Contracted</span><div id="finGrossVolume" class="text-2xl font-bold mt-1">₹0</div></div>
+            <div><span class="text-indigo-300 uppercase">Agency Comm (10%)</span><div id="finAgencyComm" class="text-2xl font-bold text-indigo-400 mt-1">₹0</div></div>
+            <div><span class="text-emerald-400 uppercase">Advance Collected</span><div id="finAdvanceCollected" class="text-2xl font-bold text-emerald-400 mt-1">₹0</div></div>
+            <div><span class="text-amber-400 uppercase">Pending Due</span><div id="finPendingDue" class="text-2xl font-bold text-amber-400 mt-1">₹0</div></div>
           </div>
         </div>
       </div>
 
       <!-- LOST ARCHIVE SECTION -->
       <div id="lostPageSection" class="hidden space-y-6">
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-4">
-          <h3 class="text-base font-bold text-slate-900 mb-3">Lost Leads Archive</h3>
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-5">
+          <h3 class="text-base font-bold text-slate-900 mb-4">Lost Leads Repository</h3>
           <table class="w-full text-left border-collapse text-xs">
             <thead>
-              <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200">
-                <th class="py-3 px-4">Client Name</th>
+              <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-semibold">
+                <th class="py-3 px-4">Client</th>
                 <th class="py-3 px-4">Reason</th>
-                <th class="py-3 px-4 text-right">Value</th>
+                <th class="py-3 px-4">Remarks</th>
+                <th class="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
             <tbody id="lostTableBody" class="divide-y divide-slate-100"></tbody>
@@ -162,30 +200,29 @@
     </div>
   </main>
 
-  <!-- ADD LEAD MODAL -->
-  <div id="addLeadModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
+  <!-- MODALS -->
+  <div id="addLeadModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
         <h3 class="text-base font-bold text-slate-900">New Wedding Lead</h3>
-        <button id="closeAddLeadModalBtn" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+        <button id="closeAddLeadModalBtn" type="button" class="text-slate-400 font-bold">✕</button>
       </div>
       <form id="contactForm" class="space-y-3.5 text-xs">
-        <div>
-          <label class="block font-semibold text-slate-700 uppercase mb-1">Client Name</label>
-          <input type="text" id="contactName" placeholder="e.g. Priya & Rohan" class="w-full px-3 py-2 border rounded-lg bg-white" required>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Client Name *</label><input type="text" id="contactName" required class="w-full px-3 py-2 border rounded-lg"></div>
+          <div><label class="block font-semibold mb-1">Vendor *</label><select id="vendorSelect" class="w-full px-3 py-2 border rounded-lg"></select></div>
         </div>
         <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-semibold text-slate-700 uppercase mb-1">Wedding Date</label>
-            <input type="date" id="weddingDate" class="w-full px-3 py-2 border rounded-lg bg-white">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-700 uppercase mb-1">Deal Value (₹)</label>
-            <input type="number" id="dealValue" placeholder="150000" class="w-full px-3 py-2 border rounded-lg bg-white">
-          </div>
+          <div><label class="block font-semibold mb-1">Phone</label><input type="tel" id="contactPhone" class="w-full px-3 py-2 border rounded-lg"></div>
+          <div><label class="block font-semibold mb-1">Wedding Date</label><input type="date" id="weddingDate" class="w-full px-3 py-2 border rounded-lg"></div>
         </div>
-        <div class="flex justify-end gap-2 pt-2 border-t">
-          <button type="submit" class="px-5 py-2 font-bold text-white bg-blue-600 rounded-lg shadow-sm">Save Lead</button>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Stage</label><select id="dealStage" class="w-full px-3 py-2 border rounded-lg"><option value="Lead In">Lead In</option><option value="Contact Made">Contact Made</option><option value="Follow Up">Follow Up</option><option value="Meeting Scheduled">Meeting Scheduled</option><option value="Contract Shared">Contract Shared</option><option value="Won">Won</option></select></div>
+          <div><label class="block font-semibold mb-1">Deal Value (₹)</label><input type="number" id="dealValue" value="0" class="w-full px-3 py-2 border rounded-lg"></div>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t">
+          <button type="button" id="cancelAddLeadBtn" class="px-4 py-2 font-medium text-slate-600">Cancel</button>
+          <button type="submit" class="px-5 py-2 font-bold text-white bg-blue-600 rounded-lg">Save Lead</button>
         </div>
       </form>
     </div>
@@ -194,6 +231,7 @@
   <script>
     const JSONBIN_ID = "6ae99cb9ac6210605a6811be";
     const JSONBIN_KEY = "$2a$10$2U8QhmId7vvYWV4Q5CZcGOD1nr4dMdbgK7P0AIVeqYwzZYgoOLOUC";
+    const stagesList = ['Lead In', 'Contact Made', 'Follow Up', 'Meeting Scheduled', 'Contract Shared', 'Won'];
 
     let vendors = JSON.parse(localStorage.getItem('crm_vendors') || 'null') || [
       { id: 'v1', name: "The Wedding Shaire", category: "Photographer" },
@@ -201,27 +239,28 @@
     ];
     let contacts = JSON.parse(localStorage.getItem('crm_contacts') || '[]');
     let lostContacts = JSON.parse(localStorage.getItem('crm_lost') || '[]');
+    let selectedVendorId = 'ALL';
+    const todayStr = new Date().toISOString().split('T')[0];
 
-    function saveDataLocally() {
-      localStorage.setItem('crm_vendors', JSON.stringify(vendors));
-      localStorage.setItem('crm_contacts', JSON.stringify(contacts));
-      localStorage.setItem('crm_lost', JSON.stringify(lostContacts));
-    }
-
-    // BACKGROUND AUTO-PUSH TO CLOUD
+    // AUTOMATIC BACKGROUND PUSH
     async function backgroundPush() {
       try {
+        const ind = document.getElementById('syncStatusIndicator');
+        if(ind) { ind.textContent = "🔄 Syncing..."; ind.className = "px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800"; }
+        
         await fetch('https://api.jsonbin.io/v3/b/' + JSONBIN_ID, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
           body: JSON.stringify({ vendors, contacts, lost: lostContacts })
         });
+        
+        if(ind) { ind.textContent = "🟢 Auto-Sync Active"; ind.className = "px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 animate-pulse"; }
       } catch (e) {
         console.error("Auto-push failed", e);
       }
     }
 
-    // BACKGROUND AUTO-PULL FROM CLOUD (Every 8 seconds)
+    // AUTOMATIC BACKGROUND PULL (Every 8 seconds)
     async function backgroundPull() {
       try {
         const res = await fetch('https://api.jsonbin.io/v3/b/' + JSONBIN_ID + '/latest', {
@@ -229,13 +268,25 @@
         });
         if (!res.ok) return;
         const data = await res.json();
-        if (data.record && data.record.contacts) {
-          if (JSON.stringify(data.record.contacts) !== JSON.stringify(contacts)) {
+        if (data.record) {
+          let updated = false;
+          if (data.record.contacts && JSON.stringify(data.record.contacts) !== JSON.stringify(contacts)) {
             contacts = data.record.contacts;
-            if (data.record.vendors) vendors = data.record.vendors;
-            if (data.record.lost) lostContacts = data.record.lost;
-            saveDataLocally();
-            renderAll();
+            localStorage.setItem('crm_contacts', JSON.stringify(contacts));
+            updated = true;
+          }
+          if (data.record.vendors && JSON.stringify(data.record.vendors) !== JSON.stringify(vendors)) {
+            vendors = data.record.vendors;
+            localStorage.setItem('crm_vendors', JSON.stringify(vendors));
+            updated = true;
+          }
+          if (data.record.lost && JSON.stringify(data.record.lost) !== JSON.stringify(lostContacts)) {
+            lostContacts = data.record.lost;
+            localStorage.setItem('crm_lost', JSON.stringify(lostContacts));
+            updated = true;
+          }
+          if (updated) {
+            renderPipeline();
           }
         }
       } catch (e) {
@@ -243,14 +294,183 @@
       }
     }
 
-    function renderAll() {
+    function saveDataAndSync() {
+      localStorage.setItem('crm_vendors', JSON.stringify(vendors));
+      localStorage.setItem('crm_contacts', JSON.stringify(contacts));
+      localStorage.setItem('crm_lost', JSON.stringify(lostContacts));
       renderPipeline();
-      renderFinances();
-      renderLost();
+      backgroundPush(); // Turant cloud par push karega
+    }
+
+    function renderNav() {
+      const wsSelect = document.getElementById('vendorWorkspaceSelect');
+      const vSelect = document.getElementById('vendorSelect');
+      if (vSelect) {
+        vSelect.innerHTML = vendors.map(v => `<option value="${v.id}">${v.name} (${v.category})</option>`).join('');
+      }
+      let html = `<option value="ALL">All Vendors (${vendors.length} Vendors • ${contacts.length} Leads)</option>`;
+      vendors.forEach(v => {
+        const cnt = contacts.filter(c => c.vendorId === v.id).length;
+        html += `<option value="${v.id}" ${selectedVendorId===v.id?'selected':''}>${v.name} (${cnt} Leads)</option>`;
+      });
+      wsSelect.innerHTML = html;
+      document.getElementById('sidePipelineCount').textContent = contacts.length;
+      document.getElementById('sideLostCount').textContent = lostContacts.length;
     }
 
     function renderPipeline() {
-      const tbody = document.getElementById('contactsTableBody');
+      renderNav();
+      const q = (document.getElementById('searchInput').value || '').toLowerCase();
       const stageFilter = document.getElementById('stageFilterSelect').value;
-      
-      let filtered = contacts.filter(c => stageFilter === 'ALL' || c.stage ===
+
+      let scoped = contacts.filter(c => selectedVendorId === 'ALL' || c.vendorId === selectedVendorId);
+      let filtered = scoped.filter(c => {
+        if (stageFilter !== 'ALL' && c.stage !== stageFilter) return false;
+        if (q && !(c.name.toLowerCase().includes(q) || (c.phone||'').includes(q))) return false;
+        return true;
+      });
+
+      document.getElementById('statTotalContacts').textContent = scoped.length;
+      const won = scoped.filter(c => c.stage === 'Won');
+      document.getElementById('statWonCount').textContent = won.length;
+      const activeVal = scoped.filter(c => c.stage !== 'Won').reduce((s, c) => s + (Number(c.value)||0), 0);
+      document.getElementById('statPipelineValue').textContent = '₹' + activeVal.toLocaleString('en-IN');
+      const due = scoped.filter(c => c.stage !== 'Won' && c.followUpDate && c.followUpDate <= todayStr).length;
+      document.getElementById('statFollowUpsDue').textContent = due;
+
+      // Table View Render
+      const tbody = document.getElementById('contactsTableBody');
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No leads found.</td></tr>`;
+      } else {
+        tbody.innerHTML = filtered.map(c => `
+          <tr class="hover:bg-slate-50">
+            <td class="py-3 px-4 font-bold">${c.name}<div class="text-[11px] text-slate-500 font-normal">${c.vendorName}</div></td>
+            <td class="py-3 px-4">${c.weddingDate || 'TBD'}<div class="text-[11px] text-slate-500">${c.venue || 'Delhi NCR'}</div></td>
+            <td class="py-3 px-4"><input type="date" value="${c.followUpDate||''}" onchange="updateDate(${c.id}, this.value)" class="text-xs border rounded px-1 py-0.5"></td>
+            <td class="py-3 px-4"><select onchange="updateStage(${c.id}, this.value)" class="text-xs border rounded px-2 py-1 font-semibold">${stagesList.map(s => `<option value="${s}" ${c.stage===s?'selected':''}>${s}</option>`).join('')}</select></td>
+            <td class="py-3 px-4 text-right font-bold">₹${Number(c.value||0).toLocaleString('en-IN')}</td>
+            <td class="py-3 px-4 text-right"><button onclick="deleteLead(${c.id})" class="text-red-500 hover:underline">Delete</button></td>
+          </tr>
+        `).join('');
+      }
+
+      // Kanban Render
+      stagesList.forEach(stage => {
+        const col = document.getElementById(`kCol-${stage}`);
+        if (!col) return;
+        const stageLeads = filtered.filter(c => c.stage === stage);
+        col.querySelector('.k-count').textContent = stageLeads.length;
+        const cards = col.querySelector('.k-cards');
+        cards.innerHTML = stageLeads.map(c => `
+          <div class="kanban-card bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2" draggable="true" data-id="${c.id}">
+            <div class="flex justify-between font-bold text-xs"><span>${c.name}</span><span>₹${Number(c.value||0).toLocaleString('en-IN')}</span></div>
+            <div class="text-[10px] text-slate-500">${c.vendorName} • ${c.weddingDate || 'Date TBD'}</div>
+          </div>
+        `).join('') || `<div class="h-20 border border-dashed rounded flex items-center justify-center text-[10px] text-slate-400">Empty</div>`;
+      });
+      setupDragAndDrop();
+    }
+
+    window.updateDate = (id, val) => { const c = contacts.find(x => x.id === id); if(c){ c.followUpDate = val; saveDataAndSync(); } };
+    window.updateStage = (id, st) => { const c = contacts.find(x => x.id === id); if(c){ c.stage = st; saveDataAndSync(); } };
+    window.deleteLead = (id) => { if(confirm('Delete lead?')) { contacts = contacts.filter(x => x.id !== id); saveDataAndSync(); } };
+
+    // Drag and drop setup
+    let draggedId = null;
+    function setupDragAndDrop() {
+      document.querySelectorAll('.kanban-card').forEach(card => {
+        card.addEventListener('dragstart', () => draggedId = Number(card.getAttribute('data-id')));
+      });
+      document.querySelectorAll('.kanban-col').forEach(col => {
+        col.addEventListener('dragover', e => e.preventDefault());
+        col.addEventListener('drop', e => {
+          e.preventDefault();
+          const targetStage = col.getAttribute('data-stage');
+          if (draggedId && targetStage) {
+            const c = contacts.find(x => x.id === draggedId);
+            if (c && c.stage !== targetStage) {
+              c.stage = targetStage;
+              saveDataAndSync();
+            }
+          }
+          draggedId = null;
+        });
+      });
+    }
+
+    // Modal bindings
+    const modal = document.getElementById('addLeadModal');
+    document.getElementById('toolbarAddLeadBtn').onclick = () => modal.classList.remove('hidden');
+    document.getElementById('closeAddLeadModalBtn').onclick = () => modal.classList.add('hidden');
+    document.getElementById('cancelAddLeadBtn').onclick = () => modal.classList.add('hidden');
+
+    document.getElementById('contactForm').onsubmit = (e) => {
+      e.preventDefault();
+      const vId = document.getElementById('vendorSelect').value;
+      const vObj = vendors.find(v => v.id === vId) || vendors[0];
+      const newLead = {
+        id: Date.now(),
+        name: document.getElementById('contactName').value.trim(),
+        vendorId: vObj.id,
+        vendorName: vObj.name,
+        phone: document.getElementById('contactPhone').value.trim(),
+        weddingDate: document.getElementById('weddingDate').value,
+        stage: document.getElementById('dealStage').value,
+        followUpDate: todayStr,
+        value: parseFloat(document.getElementById('dealValue').value) || 0
+      };
+      contacts.unshift(newLead);
+      modal.classList.add('hidden');
+      saveDataAndSync();
+      document.getElementById('contactForm').reset();
+    };
+
+    document.getElementById('vendorWorkspaceSelect').onchange = (e) => {
+      selectedVendorId = e.target.value;
+      renderPipeline();
+    };
+
+    document.getElementById('searchInput').oninput = renderPipeline;
+    document.getElementById('stageFilterSelect').onchange = renderPipeline;
+
+    document.getElementById('toggleTableBtn').onclick = () => {
+      document.getElementById('tableViewContainer').classList.remove('hidden');
+      document.getElementById('kanbanViewContainer').classList.add('hidden');
+    };
+    document.getElementById('toggleKanbanBtn').onclick = () => {
+      document.getElementById('tableViewContainer').classList.add('hidden');
+      document.getElementById('kanbanViewContainer').classList.remove('hidden');
+      renderPipeline();
+    };
+
+    document.getElementById('sideNavPipelineBtn').onclick = () => {
+      document.getElementById('pipelinePageSection').classList.remove('hidden');
+      document.getElementById('financePageSection').classList.add('hidden');
+      document.getElementById('lostPageSection').classList.add('hidden');
+    };
+    document.getElementById('sideNavFinanceBtn').onclick = () => {
+      document.getElementById('pipelinePageSection').classList.add('hidden');
+      document.getElementById('financePageSection').classList.remove('hidden');
+      document.getElementById('lostPageSection').classList.add('hidden');
+      const won = contacts.filter(c => c.stage === 'Won');
+      const gross = won.reduce((s, c) => s + (Number(c.value)||0), 0);
+      document.getElementById('finGrossVolume').textContent = '₹' + gross.toLocaleString('en-IN');
+      document.getElementById('finAgencyComm').textContent = '₹' + (gross * 0.10).toLocaleString('en-IN');
+      document.getElementById('finAdvanceCollected').textContent = '₹' + won.reduce((s, c) => s + (Number(c.advance)||0), 0).toLocaleString('en-IN');
+      document.getElementById('finPendingDue').textContent = '₹' + Math.max(0, gross).toLocaleString('en-IN');
+    };
+    document.getElementById('sideNavLostBtn').onclick = () => {
+      document.getElementById('pipelinePageSection').classList.add('hidden');
+      document.getElementById('financePageSection').classList.add('hidden');
+      document.getElementById('lostPageSection').classList.remove('hidden');
+      document.getElementById('lostTableBody').innerHTML = lostContacts.map(c => `<tr><td class="py-3 px-4 font-bold">${c.name}</td><td class="py-3 px-4">${c.lostReason||'-'}</td><td class="py-3 px-4">${c.lostRemarks||'-'}</td></tr>`).join('') || `<tr><td colspan="4" class="text-center py-4 text-slate-400">No lost leads.</td></tr>`;
+    };
+
+    // Background polling timer (har 8 seconds mein cloud se check karega)
+    setInterval(backgroundPull, 8000);
+
+    renderPipeline();
+  </script>
+</body>
+</html>
