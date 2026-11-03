@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wedding Vendor Sales CRM - Full Auto-Sync</title>
+  <title>Wedding Vendor Sales CRM - Pro Follow-Ups</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -149,7 +149,7 @@
                 <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-semibold">
                   <th class="py-3 px-4">Client & Vendor</th>
                   <th class="py-3 px-4">Wedding Date & Venue</th>
-                  <th class="py-3 px-4">Follow-Up</th>
+                  <th class="py-3 px-4">Follow-Up Status</th>
                   <th class="py-3 px-4">Stage</th>
                   <th class="py-3 px-4 text-right">Value</th>
                   <th class="py-3 px-4 text-right">Actions</th>
@@ -253,9 +253,46 @@
           <div><label class="block font-semibold mb-1">Stage</label><select id="dealStage" class="w-full px-3 py-2 border rounded-lg"><option value="Lead In">Lead In</option><option value="Contact Made">Contact Made</option><option value="Follow Up">Follow Up</option><option value="Meeting Scheduled">Meeting Scheduled</option><option value="Contract Shared">Contract Shared</option><option value="Won">Won</option></select></div>
           <div><label class="block font-semibold mb-1">Deal Value (₹)</label><input type="number" id="dealValue" value="0" class="w-full px-3 py-2 border rounded-lg"></div>
         </div>
+        <div><label class="block font-semibold mb-1">Initial Remarks / Notes</label><textarea id="contactNotes" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div>
         <div class="flex justify-end gap-2 pt-3 border-t">
           <button type="button" id="cancelAddLeadBtn" class="px-4 py-2 font-medium text-slate-600">Cancel</button>
           <button type="submit" class="px-5 py-2 font-bold text-white bg-blue-600 rounded-lg">Save Lead</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT LEAD & FOLLOW-UP (CLICK LEAD TO OPEN) -->
+  <div id="editLeadModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-pop">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <div>
+          <h3 class="text-base font-bold text-slate-900" id="editModalTitle">Update Lead & Follow-Up</h3>
+          <p class="text-[11px] text-slate-500">Click any lead in table/kanban to update details instantly.</p>
+        </div>
+        <button id="closeEditLeadModalBtn" type="button" class="text-slate-400 font-bold">✕</button>
+      </div>
+      <form id="editLeadForm" class="space-y-3.5 text-xs">
+        <input type="hidden" id="editLeadId">
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Client Name</label><input type="text" id="editClientName" required class="w-full px-3 py-2 border rounded-lg"></div>
+          <div><label class="block font-semibold mb-1">Phone</label><input type="tel" id="editClientPhone" class="w-full px-3 py-2 border rounded-lg"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Pipeline Stage</label><select id="editDealStage" class="w-full px-3 py-2 border rounded-lg"><option value="Lead In">Lead In</option><option value="Contact Made">Contact Made</option><option value="Follow Up">Follow Up</option><option value="Meeting Scheduled">Meeting Scheduled</option><option value="Contract Shared">Contract Shared</option><option value="Won">Won</option></select></div>
+          <div><label class="block font-semibold mb-1">Follow-Up Date</label><input type="date" id="editFollowUpDate" class="w-full px-3 py-2 border rounded-lg"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Deal Value (₹)</label><input type="number" id="editDealValue" class="w-full px-3 py-2 border rounded-lg"></div>
+          <div><label class="block font-semibold mb-1">Venue</label><input type="text" id="editVenue" class="w-full px-3 py-2 border rounded-lg"></div>
+        </div>
+        <div><label class="block font-semibold mb-1">Remarks / Notes</label><textarea id="editRemarks" rows="3" class="w-full px-3 py-2 border rounded-lg" placeholder="Client feedback, requirements..."></textarea></div>
+        <div class="flex justify-between items-center pt-3 border-t">
+          <button type="button" id="markLostFromEditBtn" class="px-3 py-2 font-bold text-red-600 hover:bg-red-50 rounded-lg">Mark as Lost</button>
+          <div class="flex gap-2">
+            <button type="button" id="cancelEditLeadBtn" class="px-4 py-2 font-medium text-slate-600">Cancel</button>
+            <button type="submit" class="px-5 py-2 font-bold text-white bg-blue-600 rounded-lg">Update Lead</button>
+          </div>
         </div>
       </form>
     </div>
@@ -293,6 +330,26 @@
     let selectedVendorId = 'ALL';
     let currentRole = localStorage.getItem('crm_user_role') || 'admin';
     const todayStr = new Date().toISOString().split('T')[0];
+
+    // Follow-up status badge helper (Green, Red, Yellow, Grey)
+    function getFollowUpBadge(dateStr) {
+      if (!dateStr) return { text: 'No Follow-Up', class: 'bg-slate-100 text-slate-500' };
+      if (dateStr === todayStr) {
+        return { text: '🟢 Due Today', class: 'bg-emerald-100 text-emerald-800 font-bold border border-emerald-300' };
+      }
+      if (dateStr < todayStr) {
+        return { text: '🔴 Pending / Overdue', class: 'bg-red-100 text-red-800 font-bold border border-red-300' };
+      }
+      // Future dates
+      const today = new Date(todayStr);
+      const target = new Date(dateStr);
+      const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 3) {
+        return { text: `🟡 Upcoming (${dateStr})`, class: 'bg-amber-100 text-amber-800 font-semibold border border-amber-300' };
+      }
+      return { text: `⚪ Long Upcoming (${dateStr})`, class: 'bg-slate-100 text-slate-600 border border-slate-200' };
+    }
 
     function applyRolePermissions() {
       const sidebarTag = document.getElementById('sidebarRoleTag');
@@ -421,18 +478,23 @@
 
       const tbody = document.getElementById('contactsTableBody');
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No leads found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No leads found. Click '+ New Lead' to add.</td></tr>`;
       } else {
-        tbody.innerHTML = filtered.map(c => `
-          <tr class="hover:bg-slate-50">
-            <td class="py-3 px-4 font-bold">${c.name}<div class="text-[11px] text-slate-500 font-normal">${c.vendorName}</div></td>
-            <td class="py-3 px-4">${c.weddingDate || 'TBD'}<div class="text-[11px] text-slate-500">${c.venue || 'Delhi NCR'}</div></td>
-            <td class="py-3 px-4"><input type="date" value="${c.followUpDate||''}" onchange="updateDate(${c.id}, this.value)" class="text-xs border rounded px-1 py-0.5"></td>
-            <td class="py-3 px-4"><select onchange="updateStage(${c.id}, this.value)" class="text-xs border rounded px-2 py-1 font-semibold">${stagesList.map(s => `<option value="${s}" ${c.stage===s?'selected':''}>${s}</option>`).join('')}</select></td>
-            <td class="py-3 px-4 text-right font-bold">₹${Number(c.value||0).toLocaleString('en-IN')}</td>
-            <td class="py-3 px-4 text-right"><button onclick="deleteLead(${c.id})" class="text-red-500 hover:underline">Delete</button></td>
-          </tr>
-        `).join('');
+        tbody.innerHTML = filtered.map(c => {
+          const badge = getFollowUpBadge(c.followUpDate);
+          return `
+            <tr class="hover:bg-slate-50 cursor-pointer transition" onclick="openEditModal(${c.id})">
+              <td class="py-3 px-4 font-bold text-blue-600 hover:underline">${c.name}<div class="text-[11px] text-slate-500 font-normal">${c.vendorName}</div></td>
+              <td class="py-3 px-4">${c.weddingDate || 'TBD'}<div class="text-[11px] text-slate-500">${c.venue || 'Delhi NCR'}</div></td>
+              <td class="py-3 px-4"><span class="px-2 py-1 rounded text-[10px] ${badge.class}">${badge.text}</span></td>
+              <td class="py-3 px-4"><span class="px-2 py-1 bg-slate-100 rounded text-xs font-semibold">${c.stage}</span></td>
+              <td class="py-3 px-4 text-right font-bold">₹${Number(c.value||0).toLocaleString('en-IN')}</td>
+              <td class="py-3 px-4 text-right" onclick="event.stopPropagation()">
+                <button onclick="openEditModal(${c.id})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-xs font-semibold text-slate-700">Edit</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
       }
 
       stagesList.forEach(stage => {
@@ -441,19 +503,71 @@
         const stageLeads = filtered.filter(c => c.stage === stage);
         col.querySelector('.k-count').textContent = stageLeads.length;
         const cards = col.querySelector('.k-cards');
-        cards.innerHTML = stageLeads.map(c => `
-          <div class="kanban-card bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2" draggable="true" data-id="${c.id}">
-            <div class="flex justify-between font-bold text-xs"><span>${c.name}</span><span>₹${Number(c.value||0).toLocaleString('en-IN')}</span></div>
-            <div class="text-[10px] text-slate-500">${c.vendorName} • ${c.weddingDate || 'Date TBD'}</div>
-          </div>
-        `).join('') || `<div class="h-20 border border-dashed rounded flex items-center justify-center text-[10px] text-slate-400">Empty</div>`;
+        cards.innerHTML = stageLeads.map(c => {
+          const badge = getFollowUpBadge(c.followUpDate);
+          return `
+            <div class="kanban-card bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2 hover:border-blue-300 transition" draggable="true" data-id="${c.id}" onclick="openEditModal(${c.id})">
+              <div class="flex justify-between font-bold text-xs"><span class="text-blue-600">${c.name}</span><span>₹${Number(c.value||0).toLocaleString('en-IN')}</span></div>
+              <div class="text-[10px] text-slate-500">${c.vendorName}</div>
+              <div class="pt-1 flex items-center justify-between">
+                <span class="px-1.5 py-0.5 rounded text-[9px] ${badge.class}">${badge.text}</span>
+              </div>
+            </div>
+          `;
+        }).join('') || `<div class="h-20 border border-dashed rounded flex items-center justify-center text-[10px] text-slate-400">Empty</div>`;
       });
       setupDragAndDrop();
     }
 
-    window.updateDate = (id, val) => { const c = contacts.find(x => x.id === id); if(c){ c.followUpDate = val; saveDataAndSync(); } };
-    window.updateStage = (id, st) => { const c = contacts.find(x => x.id === id); if(c){ c.stage = st; saveDataAndSync(); } };
-    window.deleteLead = (id) => { if(confirm('Delete lead?')) { contacts = contacts.filter(x => x.id !== id); saveDataAndSync(); } };
+    // EDIT MODAL LOGIC (CLICK LEAD)
+    const editModal = document.getElementById('editLeadModal');
+    window.openEditModal = function(id) {
+      const c = contacts.find(x => x.id === id);
+      if(!c) return;
+      document.getElementById('editLeadId').value = c.id;
+      document.getElementById('editClientName').value = c.name || '';
+      document.getElementById('editClientPhone').value = c.phone || '';
+      document.getElementById('editDealStage').value = c.stage || 'Lead In';
+      document.getElementById('editFollowUpDate').value = c.followUpDate || todayStr;
+      document.getElementById('editDealValue').value = c.value || 0;
+      document.getElementById('editVenue').value = c.venue || '';
+      document.getElementById('editRemarks').value = c.remarks || '';
+      document.getElementById('editModalTitle').textContent = `Update Lead: ${c.name}`;
+      editModal.classList.remove('hidden');
+    }
+
+    document.getElementById('closeEditLeadModalBtn').onclick = () => editModal.classList.add('hidden');
+    document.getElementById('cancelEditLeadBtn').onclick = () => editModal.classList.add('hidden');
+
+    document.getElementById('editLeadForm').onsubmit = (e) => {
+      e.preventDefault();
+      const id = Number(document.getElementById('editLeadId').value);
+      const c = contacts.find(x => x.id === id);
+      if(c) {
+        c.name = document.getElementById('editClientName').value.trim();
+        c.phone = document.getElementById('editClientPhone').value.trim();
+        c.stage = document.getElementById('editDealStage').value;
+        c.followUpDate = document.getElementById('editFollowUpDate').value;
+        c.value = parseFloat(document.getElementById('editDealValue').value) || 0;
+        c.venue = document.getElementById('editVenue').value.trim();
+        c.remarks = document.getElementById('editRemarks').value.trim();
+        editModal.classList.add('hidden');
+        saveDataAndSync();
+      }
+    };
+
+    document.getElementById('markLostFromEditBtn').onclick = () => {
+      const id = Number(document.getElementById('editLeadId').value);
+      const c = contacts.find(x => x.id === id);
+      if(c && confirm(`Mark ${c.name} as Lost?`)) {
+        c.lostReason = "User marked lost";
+        c.lostRemarks = c.remarks || "No remarks";
+        lostContacts.unshift(c);
+        contacts = contacts.filter(x => x.id !== id);
+        editModal.classList.add('hidden');
+        saveDataAndSync();
+      }
+    };
 
     let draggedId = null;
     function setupDragAndDrop() {
@@ -513,7 +627,8 @@
         weddingDate: document.getElementById('weddingDate').value,
         stage: document.getElementById('dealStage').value,
         followUpDate: todayStr,
-        value: parseFloat(document.getElementById('dealValue').value) || 0
+        value: parseFloat(document.getElementById('dealValue').value) || 0,
+        remarks: document.getElementById('contactNotes').value.trim()
       };
       contacts.unshift(newLead);
       leadModal.classList.add('hidden');
