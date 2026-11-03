@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wedding Vendor Sales CRM - Auto Sync</title>
+  <title>Wedding Vendor Sales CRM - Full Auto-Sync</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -32,10 +32,10 @@
         <div class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shadow-sm">W</div>
         <div>
           <h2 class="text-xs font-bold text-white uppercase leading-tight">Wedding CRM</h2>
-          <span id="sidebarRoleTag" class="text-[10px] text-emerald-400 font-semibold">Admin (Auto-Sync)</span>
+          <span id="sidebarRoleTag" class="text-[10px] text-emerald-400 font-semibold">Admin Workspace</span>
         </div>
       </div>
-      <button id="quickLockToggleBtn" class="text-xs text-slate-400 hover:text-white transition p-1" title="Toggle Mode">🔒</button>
+      <button id="quickLockToggleBtn" class="text-xs text-slate-400 hover:text-white transition p-1" title="Switch or Lock Role">🔒</button>
     </div>
 
     <nav class="flex-1 px-3 py-4 space-y-1.5 text-xs font-medium overflow-y-auto">
@@ -44,14 +44,39 @@
         <span class="flex-1 font-semibold">Deals Pipeline</span>
         <span id="sidePipelineCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-bold">0</span>
       </button>
-      <button id="sideNavFinanceBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
-        <span class="flex-1 font-semibold">Finances & 10% Comm</span>
-      </button>
-      <button id="sideNavLostBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
-        <span class="flex-1">Lost Archive</span>
-        <span id="sideLostCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
-      </button>
+      
+      <!-- ADMIN ONLY SECTION -->
+      <div id="adminNavSection" class="pt-3 space-y-1.5">
+        <div class="px-2 pb-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider">Admin Controls</div>
+        <button id="sideNavFinanceBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+          <span class="flex-1 font-semibold">Finances & 10% Comm</span>
+        </button>
+        <button id="sideNavVendorsBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+          <span class="flex-1">Manage Vendors (<span id="sideVendorCount">0</span>)</span>
+        </button>
+      </div>
+
+      <div class="pt-3">
+        <button id="sideNavLostBtn" type="button" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 hover:text-white text-left">
+          <span class="flex-1">Lost Archive</span>
+          <span id="sideLostCount" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+        </button>
+      </div>
     </nav>
+
+    <!-- ROLE SWITCHER BOTTOM -->
+    <div class="p-3 border-t border-slate-800 bg-slate-950/50">
+      <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] uppercase font-bold text-slate-400">Mode</span>
+          <span id="rolePillStatus" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Admin</span>
+        </div>
+        <div class="grid grid-cols-2 gap-1.5 pt-1">
+          <button id="roleToSalesBtn" type="button" class="py-1 px-2 rounded text-[11px] font-semibold bg-slate-800 text-slate-200">Sales Closer</button>
+          <button id="roleToAdminBtn" type="button" class="py-1 px-2 rounded text-[11px] font-bold bg-blue-600 text-white">Admin</button>
+        </div>
+      </div>
+    </div>
   </aside>
 
   <!-- MAIN CONTENT -->
@@ -179,6 +204,14 @@
         </div>
       </div>
 
+      <!-- VENDORS SECTION -->
+      <div id="vendorsPageSection" class="hidden space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-5">
+          <h3 class="text-base font-bold text-slate-900 mb-4">Manage Vendor Partners</h3>
+          <div id="vendorsListContainer" class="space-y-2"></div>
+        </div>
+      </div>
+
       <!-- LOST ARCHIVE SECTION -->
       <div id="lostPageSection" class="hidden space-y-6">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-5">
@@ -200,7 +233,7 @@
     </div>
   </main>
 
-  <!-- MODALS -->
+  <!-- MODAL: ADD LEAD -->
   <div id="addLeadModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-pop">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -228,6 +261,24 @@
     </div>
   </div>
 
+  <!-- MODAL: ADD VENDOR -->
+  <div id="addVendorModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl animate-pop">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <h3 class="text-base font-bold text-slate-900">Add New Vendor Space</h3>
+        <button id="closeAddVendorModalBtn" type="button" class="text-slate-400 font-bold">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div><label class="block font-semibold mb-1">Vendor Brand Name *</label><input type="text" id="newVendorName" placeholder="e.g. SLC Productions" class="w-full px-3 py-2 border rounded-lg bg-white"></div>
+        <div><label class="block font-semibold mb-1">Category</label><select id="newVendorCategory" class="w-full px-3 py-2 border rounded-lg bg-white"><option value="Photographer">Photographer</option><option value="Makeup Artist">Makeup Artist</option><option value="Wedding Decor">Wedding Decor</option><option value="Other">Other</option></select></div>
+        <div class="flex justify-end gap-2 pt-3 border-t">
+          <button type="button" id="cancelVendorModalBtn" class="px-4 py-2 font-medium text-slate-600">Cancel</button>
+          <button type="button" id="saveVendorBtn" class="px-5 py-2 font-bold text-white bg-slate-900 rounded-lg">Save Vendor</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const JSONBIN_ID = "6ae99cb9ac6210605a6811be";
     const JSONBIN_KEY = "$2a$10$2U8QhmId7vvYWV4Q5CZcGOD1nr4dMdbgK7P0AIVeqYwzZYgoOLOUC";
@@ -240,9 +291,41 @@
     let contacts = JSON.parse(localStorage.getItem('crm_contacts') || '[]');
     let lostContacts = JSON.parse(localStorage.getItem('crm_lost') || '[]');
     let selectedVendorId = 'ALL';
+    let currentRole = localStorage.getItem('crm_user_role') || 'admin';
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // AUTOMATIC BACKGROUND PUSH
+    function applyRolePermissions() {
+      const sidebarTag = document.getElementById('sidebarRoleTag');
+      const rolePill = document.getElementById('rolePillStatus');
+      const adminNav = document.getElementById('adminNavSection');
+      const addVendorBtn = document.getElementById('headerAddVendorBtn');
+
+      if (currentRole === 'sales') {
+        sidebarTag.textContent = 'Sales Closer';
+        sidebarTag.className = 'text-[10px] text-blue-400 font-semibold';
+        rolePill.textContent = 'Sales Mode';
+        rolePill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400';
+        adminNav.classList.add('hidden');
+        addVendorBtn.classList.add('hidden');
+      } else {
+        sidebarTag.textContent = 'Admin Workspace';
+        sidebarTag.className = 'text-[10px] text-emerald-400 font-semibold';
+        rolePill.textContent = 'Admin Mode';
+        rolePill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400';
+        adminNav.classList.remove('hidden');
+        addVendorBtn.classList.remove('hidden');
+      }
+      localStorage.setItem('crm_user_role', currentRole);
+    }
+
+    document.getElementById('roleToSalesBtn').onclick = () => { currentRole = 'sales'; applyRolePermissions(); renderPipeline(); };
+    document.getElementById('roleToAdminBtn').onclick = () => { currentRole = 'admin'; applyRolePermissions(); renderPipeline(); };
+    document.getElementById('quickLockToggleBtn').onclick = () => {
+      currentRole = currentRole === 'admin' ? 'sales' : 'admin';
+      applyRolePermissions();
+      renderPipeline();
+    };
+
     async function backgroundPush() {
       try {
         const ind = document.getElementById('syncStatusIndicator');
@@ -260,7 +343,6 @@
       }
     }
 
-    // AUTOMATIC BACKGROUND PULL (Every 8 seconds)
     async function backgroundPull() {
       try {
         const res = await fetch('https://api.jsonbin.io/v3/b/' + JSONBIN_ID + '/latest', {
@@ -285,9 +367,7 @@
             localStorage.setItem('crm_lost', JSON.stringify(lostContacts));
             updated = true;
           }
-          if (updated) {
-            renderPipeline();
-          }
+          if (updated) renderPipeline();
         }
       } catch (e) {
         console.error("Auto-pull failed", e);
@@ -299,7 +379,7 @@
       localStorage.setItem('crm_contacts', JSON.stringify(contacts));
       localStorage.setItem('crm_lost', JSON.stringify(lostContacts));
       renderPipeline();
-      backgroundPush(); // Turant cloud par push karega
+      backgroundPush();
     }
 
     function renderNav() {
@@ -316,6 +396,7 @@
       wsSelect.innerHTML = html;
       document.getElementById('sidePipelineCount').textContent = contacts.length;
       document.getElementById('sideLostCount').textContent = lostContacts.length;
+      document.getElementById('sideVendorCount').textContent = vendors.length;
     }
 
     function renderPipeline() {
@@ -338,7 +419,6 @@
       const due = scoped.filter(c => c.stage !== 'Won' && c.followUpDate && c.followUpDate <= todayStr).length;
       document.getElementById('statFollowUpsDue').textContent = due;
 
-      // Table View Render
       const tbody = document.getElementById('contactsTableBody');
       if (filtered.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">No leads found.</td></tr>`;
@@ -355,7 +435,6 @@
         `).join('');
       }
 
-      // Kanban Render
       stagesList.forEach(stage => {
         const col = document.getElementById(`kCol-${stage}`);
         if (!col) return;
@@ -376,7 +455,6 @@
     window.updateStage = (id, st) => { const c = contacts.find(x => x.id === id); if(c){ c.stage = st; saveDataAndSync(); } };
     window.deleteLead = (id) => { if(confirm('Delete lead?')) { contacts = contacts.filter(x => x.id !== id); saveDataAndSync(); } };
 
-    // Drag and drop setup
     let draggedId = null;
     function setupDragAndDrop() {
       document.querySelectorAll('.kanban-card').forEach(card => {
@@ -399,11 +477,28 @@
       });
     }
 
-    // Modal bindings
-    const modal = document.getElementById('addLeadModal');
-    document.getElementById('toolbarAddLeadBtn').onclick = () => modal.classList.remove('hidden');
-    document.getElementById('closeAddLeadModalBtn').onclick = () => modal.classList.add('hidden');
-    document.getElementById('cancelAddLeadBtn').onclick = () => modal.classList.add('hidden');
+    // Modals
+    const leadModal = document.getElementById('addLeadModal');
+    document.getElementById('toolbarAddLeadBtn').onclick = () => leadModal.classList.remove('hidden');
+    document.getElementById('closeAddLeadModalBtn').onclick = () => leadModal.classList.add('hidden');
+    document.getElementById('cancelAddLeadBtn').onclick = () => leadModal.classList.add('hidden');
+
+    const vendorModal = document.getElementById('addVendorModal');
+    document.getElementById('headerAddVendorBtn').onclick = () => vendorModal.classList.remove('hidden');
+    document.getElementById('closeAddVendorModalBtn').onclick = () => vendorModal.classList.add('hidden');
+    document.getElementById('cancelVendorModalBtn').onclick = () => vendorModal.classList.add('hidden');
+
+    document.getElementById('saveVendorBtn').onclick = () => {
+      const name = document.getElementById('newVendorName').value.trim();
+      const cat = document.getElementById('newVendorCategory').value;
+      if(!name) { alert('Please enter vendor name'); return; }
+      const newV = { id: 'v_' + Date.now(), name, category: cat };
+      vendors.push(newV);
+      selectedVendorId = newV.id;
+      vendorModal.classList.add('hidden');
+      document.getElementById('newVendorName').value = '';
+      saveDataAndSync();
+    };
 
     document.getElementById('contactForm').onsubmit = (e) => {
       e.preventDefault();
@@ -421,16 +516,12 @@
         value: parseFloat(document.getElementById('dealValue').value) || 0
       };
       contacts.unshift(newLead);
-      modal.classList.add('hidden');
+      leadModal.classList.add('hidden');
       saveDataAndSync();
       document.getElementById('contactForm').reset();
     };
 
-    document.getElementById('vendorWorkspaceSelect').onchange = (e) => {
-      selectedVendorId = e.target.value;
-      renderPipeline();
-    };
-
+    document.getElementById('vendorWorkspaceSelect').onchange = (e) => { selectedVendorId = e.target.value; renderPipeline(); };
     document.getElementById('searchInput').oninput = renderPipeline;
     document.getElementById('stageFilterSelect').onchange = renderPipeline;
 
@@ -447,11 +538,13 @@
     document.getElementById('sideNavPipelineBtn').onclick = () => {
       document.getElementById('pipelinePageSection').classList.remove('hidden');
       document.getElementById('financePageSection').classList.add('hidden');
+      document.getElementById('vendorsPageSection').classList.add('hidden');
       document.getElementById('lostPageSection').classList.add('hidden');
     };
     document.getElementById('sideNavFinanceBtn').onclick = () => {
       document.getElementById('pipelinePageSection').classList.add('hidden');
       document.getElementById('financePageSection').classList.remove('hidden');
+      document.getElementById('vendorsPageSection').classList.add('hidden');
       document.getElementById('lostPageSection').classList.add('hidden');
       const won = contacts.filter(c => c.stage === 'Won');
       const gross = won.reduce((s, c) => s + (Number(c.value)||0), 0);
@@ -460,16 +553,23 @@
       document.getElementById('finAdvanceCollected').textContent = '₹' + won.reduce((s, c) => s + (Number(c.advance)||0), 0).toLocaleString('en-IN');
       document.getElementById('finPendingDue').textContent = '₹' + Math.max(0, gross).toLocaleString('en-IN');
     };
+    document.getElementById('sideNavVendorsBtn').onclick = () => {
+      document.getElementById('pipelinePageSection').classList.add('hidden');
+      document.getElementById('financePageSection').classList.add('hidden');
+      document.getElementById('vendorsPageSection').classList.remove('hidden');
+      document.getElementById('lostPageSection').classList.add('hidden');
+      document.getElementById('vendorsListContainer').innerHTML = vendors.map(v => `<div class="p-3 border rounded-lg flex justify-between items-center text-xs"><div><b>${v.name}</b> <span class="text-slate-500">(${v.category})</span></div></div>`).join('');
+    };
     document.getElementById('sideNavLostBtn').onclick = () => {
       document.getElementById('pipelinePageSection').classList.add('hidden');
       document.getElementById('financePageSection').classList.add('hidden');
+      document.getElementById('vendorsPageSection').classList.add('hidden');
       document.getElementById('lostPageSection').classList.remove('hidden');
       document.getElementById('lostTableBody').innerHTML = lostContacts.map(c => `<tr><td class="py-3 px-4 font-bold">${c.name}</td><td class="py-3 px-4">${c.lostReason||'-'}</td><td class="py-3 px-4">${c.lostRemarks||'-'}</td></tr>`).join('') || `<tr><td colspan="4" class="text-center py-4 text-slate-400">No lost leads.</td></tr>`;
     };
 
-    // Background polling timer (har 8 seconds mein cloud se check karega)
+    applyRolePermissions();
     setInterval(backgroundPull, 8000);
-
     renderPipeline();
   </script>
 </body>
