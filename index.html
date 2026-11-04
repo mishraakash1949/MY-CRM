@@ -147,7 +147,7 @@
                 <option value="Contract Shared">Contract Shared</option>
                 <option value="Won">Won</option>
               </select>
-              <input type="text" id="searchInput" placeholder="Search client, venue..." class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg w-40">
+              <input type="text" id="searchInput" placeholder="Search client, phone, venue..." class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg w-44">
             </div>
           </div>
 
@@ -156,7 +156,7 @@
             <table class="w-full text-left border-collapse text-xs">
               <thead>
                 <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-semibold">
-                  <th class="py-3 px-4">Client & Insta</th>
+                  <th class="py-3 px-4">Client, Phone & Insta</th>
                   <th class="py-3 px-4">Event & Type</th>
                   <th class="py-3 px-4">Venue & Date</th>
                   <th class="py-3 px-4">Follow-Up</th>
@@ -229,7 +229,7 @@
           <table class="w-full text-left border-collapse text-xs">
             <thead>
               <tr class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200 font-semibold">
-                <th class="py-3 px-4">Client</th>
+                <th class="py-3 px-4">Client & Phone</th>
                 <th class="py-3 px-4">Event Type</th>
                 <th class="py-3 px-4">Drop-Off Reason</th>
                 <th class="py-3 px-4">Remarks</th>
@@ -257,19 +257,22 @@
           <div><label class="block font-semibold mb-1">Assigned Vendor *</label><select id="vendorSelect" class="w-full px-3 py-2 border rounded-lg"></select></div>
         </div>
         <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Phone Number *</label><input type="tel" id="contactPhone" required placeholder="9876543210" class="w-full px-3 py-2 border rounded-lg"></div>
           <div><label class="block font-semibold mb-1">Instagram Handle</label><input type="text" id="instaHandle" placeholder="@insta" class="w-full px-3 py-2 border rounded-lg"></div>
-          <div><label class="block font-semibold mb-1">Event Type</label><select id="eventType" class="w-full px-3 py-2 border rounded-lg"><option value="Wedding">Wedding</option><option value="Pre Wedding">Pre Wedding</option><option value="Engagement">Engagement</option><option value="Birthday">Birthday</option><option value="Other">Other</option></select></div>
         </div>
         <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Event Type</label><select id="eventType" class="w-full px-3 py-2 border rounded-lg"><option value="Wedding">Wedding</option><option value="Pre Wedding">Pre Wedding</option><option value="Engagement">Engagement</option><option value="Birthday">Birthday</option><option value="Other">Other</option></select></div>
           <div><label class="block font-semibold mb-1">Event Date</label><input type="date" id="weddingDate" class="w-full px-3 py-2 border rounded-lg"></div>
-          <div><label class="block font-semibold mb-1">Venue / City</label><input type="text" id="venueLocation" placeholder="Lucknow" class="w-full px-3 py-2 border rounded-lg"></div>
         </div>
         <div class="grid grid-cols-3 gap-2">
+          <div><label class="block font-semibold mb-1">Venue / City</label><input type="text" id="venueLocation" placeholder="Lucknow" class="w-full px-3 py-2 border rounded-lg"></div>
           <div><label class="block font-semibold mb-1">Stage</label><select id="dealStage" class="w-full px-3 py-2 border rounded-lg"><option value="Lead In">Lead In</option><option value="Contact Made">Contact Made</option><option value="Follow Up">Follow Up</option><option value="Meeting Scheduled">Meeting Scheduled</option><option value="Contract Shared">Contract Shared</option><option value="Won">Won</option></select></div>
           <div><label class="block font-semibold mb-1">Follow-Up</label><input type="date" id="followUpDate" class="w-full px-3 py-2 border rounded-lg"></div>
-          <div><label class="block font-semibold mb-1">Value (₹)</label><input type="number" id="dealValue" value="0" class="w-full px-3 py-2 border rounded-lg"></div>
         </div>
-        <div><label class="block font-semibold mb-1">Remarks</label><textarea id="contactNotes" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Value (₹)</label><input type="number" id="dealValue" value="0" class="w-full px-3 py-2 border rounded-lg"></div>
+          <div><label class="block font-semibold mb-1">Remarks</label><input type="text" id="contactNotes" class="w-full px-3 py-2 border rounded-lg"></div>
+        </div>
         <div class="flex justify-end gap-2 pt-3 border-t">
           <button type="button" id="cancelAddLeadBtn" class="px-4 py-2 font-medium text-slate-600">Cancel</button>
           <button type="submit" class="px-5 py-2 font-bold text-white bg-blue-600 rounded-lg">Save Lead</button>
@@ -288,18 +291,21 @@
         <input type="hidden" id="editLeadId">
         <div class="grid grid-cols-2 gap-3">
           <div><label class="block font-semibold mb-1">Client Name</label><input type="text" id="editClientName" required class="w-full px-3 py-2 border rounded-lg"></div>
-          <div><label class="block font-semibold mb-1">Instagram</label><input type="text" id="editInsta" class="w-full px-3 py-2 border rounded-lg"></div>
+          <div><label class="block font-semibold mb-1">Phone Number</label><input type="tel" id="editClientPhone" required class="w-full px-3 py-2 border rounded-lg"></div>
         </div>
         <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Instagram</label><input type="text" id="editInsta" class="w-full px-3 py-2 border rounded-lg"></div>
           <div><label class="block font-semibold mb-1">Event Type</label><select id="editEventType" class="w-full px-3 py-2 border rounded-lg"><option value="Wedding">Wedding</option><option value="Pre Wedding">Pre Wedding</option><option value="Engagement">Engagement</option><option value="Birthday">Birthday</option><option value="Other">Other</option></select></div>
-          <div><label class="block font-semibold mb-1">Stage</label><select id="editDealStage" class="w-full px-3 py-2 border rounded-lg"><option value="Lead In">Lead In</option><option value="Contact Made">Contact Made</option><option value="Follow Up">Follow Up</option><option value="Meeting Scheduled">Meeting Scheduled</option><option value="Contract Shared">Contract Shared</option><option value="Won">Won</option></select></div>
         </div>
         <div class="grid grid-cols-3 gap-2">
+          <div><label class="block font-semibold mb-1">Stage</label><select id="editDealStage" class="w-full px-3 py-2 border rounded-lg"><option value="Lead In">Lead In</option><option value="Contact Made">Contact Made</option><option value="Follow Up">Follow Up</option><option value="Meeting Scheduled">Meeting Scheduled</option><option value="Contract Shared">Contract Shared</option><option value="Won">Won</option></select></div>
           <div><label class="block font-semibold mb-1">Event Date</label><input type="date" id="editWeddingDate" class="w-full px-3 py-2 border rounded-lg"></div>
           <div><label class="block font-semibold mb-1">Follow-Up</label><input type="date" id="editFollowUpDate" class="w-full px-3 py-2 border rounded-lg"></div>
-          <div><label class="block font-semibold mb-1">Value (₹)</label><input type="number" id="editDealValue" class="w-full px-3 py-2 border rounded-lg"></div>
         </div>
-        <div><label class="block font-semibold mb-1">Venue / City</label><input type="text" id="editVenue" class="w-full px-3 py-2 border rounded-lg"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block font-semibold mb-1">Value (₹)</label><input type="number" id="editDealValue" class="w-full px-3 py-2 border rounded-lg"></div>
+          <div><label class="block font-semibold mb-1">Venue / City</label><input type="text" id="editVenue" class="w-full px-3 py-2 border rounded-lg"></div>
+        </div>
         <div><label class="block font-semibold mb-1">Remarks</label><textarea id="editRemarks" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea></div>
         <div class="flex justify-between items-center pt-3 border-t">
           <button type="button" id="markLostFromEditBtn" class="px-3 py-2 font-bold text-red-600 hover:bg-red-50 rounded-lg">Mark as Lost</button>
@@ -405,7 +411,6 @@
       renderPipeline();
     };
 
-    // Smart Save: Instant Local Push + Cloud Sync (Safe from quota limits)
     async function backgroundPush() {
       try {
         const ind = document.getElementById('syncStatusIndicator');
@@ -419,7 +424,6 @@
       } catch (e) { console.error("Push error", e); }
     }
 
-    // Manual or Smart Pull (On demand / page load / focus to save API quota)
     async function checkCloudUpdates() {
       try {
         const res = await fetch('https://api.jsonbin.io/v3/b/' + JSONBIN_ID + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } });
@@ -475,7 +479,7 @@
       let scoped = contacts.filter(c => selectedVendorId === 'ALL' || c.vendorId === selectedVendorId);
       let filtered = scoped.filter(c => {
         if (stageFilter !== 'ALL' && c.stage !== stageFilter) return false;
-        if (q && !(c.name.toLowerCase().includes(q) || (c.venue||'').toLowerCase().includes(q) || (c.insta||'').toLowerCase().includes(q))) return false;
+        if (q && !(c.name.toLowerCase().includes(q) || (c.phone||'').includes(q) || (c.venue||'').toLowerCase().includes(q) || (c.insta||'').toLowerCase().includes(q))) return false;
         return true;
       });
 
@@ -500,10 +504,12 @@
       } else {
         tbody.innerHTML = filtered.map(c => {
           const badge = getFollowUpBadge(c.followUpDate);
+          const cleanPhone = (c.phone || '').replace(/\D/g, '');
           return `
             <tr class="hover:bg-slate-50 cursor-pointer transition" onclick="openEditModal(${c.id})">
               <td class="py-3 px-4 font-bold text-blue-600 hover:underline">
                 ${c.name}
+                <div class="text-[11px] text-slate-700 font-mono font-semibold">📞 ${c.phone || 'No Phone'}</div>
                 <div class="text-[11px] text-slate-500 font-normal">📸 ${c.insta || 'No Insta'}</div>
               </td>
               <td class="py-3 px-4">
@@ -518,6 +524,7 @@
               <td class="py-3 px-4"><span class="px-2 py-1 bg-slate-100 rounded text-xs font-semibold">${c.stage}</span></td>
               <td class="py-3 px-4 text-right font-bold">₹${Number(c.value||0).toLocaleString('en-IN')}</td>
               <td class="py-3 px-4 text-right space-x-1" onclick="event.stopPropagation()">
+                ${cleanPhone ? `<a href="https://wa.me/91${cleanPhone}" target="_blank" class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 rounded text-xs font-semibold text-emerald-700 inline-block" title="Chat on WhatsApp">WA</a>` : ''}
                 <button onclick="openEditModal(${c.id})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded text-xs font-semibold text-slate-700">Edit</button>
                 <button onclick="promptLost(${c.id})" class="px-2 py-1 bg-red-50 hover:bg-red-100 rounded text-xs font-semibold text-red-600">Lost</button>
               </td>
@@ -534,13 +541,16 @@
         const cards = col.querySelector('.k-cards');
         cards.innerHTML = stageLeads.map(c => {
           const badge = getFollowUpBadge(c.followUpDate);
+          const cleanPhone = (c.phone || '').replace(/\D/g, '');
           return `
             <div class="kanban-card bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2 hover:border-blue-300 transition" draggable="true" data-id="${c.id}" onclick="openEditModal(${c.id})">
               <div class="flex justify-between font-bold text-xs"><span class="text-blue-600">${c.name}</span><span>₹${Number(c.value||0).toLocaleString('en-IN')}</span></div>
+              <div class="text-[11px] text-slate-700 font-mono font-semibold">📞 ${c.phone || 'No Phone'}</div>
               <div class="text-[10px] text-slate-500">📸 ${c.insta || 'No Insta'} • <b>${c.eventType || 'Wedding'}</b></div>
               <div class="text-[10px] text-slate-600 font-medium">📍 ${c.venue || 'Venue TBD'} (${c.weddingDate || 'Date TBD'})</div>
-              <div class="pt-1 flex items-center justify-between">
+              <div class="pt-1 flex items-center justify-between" onclick="event.stopPropagation()">
                 <span class="px-1.5 py-0.5 rounded text-[9px] ${badge.class}">${badge.text}</span>
+                ${cleanPhone ? `<a href="https://wa.me/91${cleanPhone}" target="_blank" class="px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded text-[10px] font-bold">💬 WhatsApp</a>` : ''}
               </div>
             </div>
           `;
@@ -555,6 +565,7 @@
       if(!c) return;
       document.getElementById('editLeadId').value = c.id;
       document.getElementById('editClientName').value = c.name || '';
+      document.getElementById('editClientPhone').value = c.phone || '';
       document.getElementById('editInsta').value = c.insta || '';
       document.getElementById('editEventType').value = c.eventType || 'Wedding';
       document.getElementById('editDealStage').value = c.stage || 'Lead In';
@@ -575,6 +586,7 @@
       const c = contacts.find(x => x.id === id);
       if(c) {
         c.name = document.getElementById('editClientName').value.trim();
+        c.phone = document.getElementById('editClientPhone').value.trim();
         c.insta = document.getElementById('editInsta').value.trim();
         c.eventType = document.getElementById('editEventType').value;
         c.stage = document.getElementById('editDealStage').value;
@@ -706,6 +718,7 @@
         name: document.getElementById('contactName').value.trim(),
         vendorId: vObj.id,
         vendorName: vObj.name,
+        phone: document.getElementById('contactPhone').value.trim(),
         insta: document.getElementById('instaHandle').value.trim(),
         eventType: document.getElementById('eventType').value,
         weddingDate: document.getElementById('weddingDate').value,
@@ -773,7 +786,7 @@
       document.getElementById('lostPageSection').classList.remove('hidden');
       document.getElementById('lostTableBody').innerHTML = lostContacts.map(c => `
         <tr class="hover:bg-slate-50">
-          <td class="py-3 px-4 font-bold">${c.name} <div class="text-[11px] text-slate-500 font-normal">📸 ${c.insta||'-'}</div></td>
+          <td class="py-3 px-4 font-bold">${c.name} <div class="text-[11px] text-slate-700 font-mono font-semibold">📞 ${c.phone||'-'}</div></td>
           <td class="py-3 px-4"><span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 font-semibold rounded">${c.eventType||'Wedding'}</span></td>
           <td class="py-3 px-4 font-semibold text-red-600">${c.lostReason || 'Other'}</td>
           <td class="py-3 px-4 text-slate-600">${c.lostRemarks || '-'}</td>
@@ -793,7 +806,6 @@
     };
 
     applyRolePermissions();
-    // Smart Real-time sync: Check on tab focus or click instead of heavy continuous timer to save quota
     window.addEventListener('focus', checkCloudUpdates);
     checkCloudUpdates();
     renderPipeline();
