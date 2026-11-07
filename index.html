@@ -663,8 +663,14 @@
       });
     }
 
+    // FIXED EXPORT FUNCTION (Exports only JSON data, not HTML code)
     document.getElementById('exportCsvBtn').onclick = () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ vendors, contacts, lost: lostContacts }, null, 2));
+      const exportData = {
+        vendors: vendors,
+        contacts: contacts,
+        lost: lostContacts
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
       const dlAnchor = document.createElement('a');
       dlAnchor.setAttribute("href", dataStr);
       dlAnchor.setAttribute("download", "wedding_crm_backup_" + todayStr + ".json");
